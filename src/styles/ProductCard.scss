@@ -1,0 +1,75 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+.product-card {
+  // font-family: 'Your Font Name', sans-serif; // Change this to the desired font
+
+  .card-title {
+    margin: 0;
+    font-size: 16px;
+    font-family: "Lora", sans-serif;
+    white-space: nowrap; // Prevent wrapping of text
+    overflow: hidden; // Hide overflowing text
+    text-overflow: ellipsis; // Add '...' when text overflows
+  }
+
+  .card-text {
+    display: inline;
+    vertical-align: middle;
+  }
+
+  .discount {
+    margin: 0; // Remove margins around title and description
+    font-size: 20px;
+    color: $cyan-300;
+    font-family: "Roboto", sans-serif;
+  }
+
+  .price {
+    margin: 0 5px 0; // Remove margins around title and description
+    font-size: 16px;
+    color: lightgray;
+    font-family: "Roboto", sans-serif;
+  }
+
+  .card-footer {
+    padding: 0; // Optional: remove padding from footer to reduce space
+  }
+
+  .card-body {
+    padding-bottom: 0; // Reduce bottom padding for better spacing control
+  }
+
+  .star-icons {
+    display: flex;
+    gap: 5px;
+    margin-top: 0;
+
+    .filled-star {
+      color: $yellow-400; // Use Bootstrap's $yellow-400 variable
+    }
+
+    .empty-star {
+      color: gray; // Style empty stars (gray)
+    }
+  }
+
+  /* For large image size */
+  .large-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  /* For small image size */
+  .small-img {
+    width: 60%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+}

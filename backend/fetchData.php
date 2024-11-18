@@ -1,16 +1,39 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Origin: *");  // Allows requests from any origin
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");  // Adjust the methods as needed
+header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allow specific headers if necessary
 
-include 'db.php';
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "minnano";
 
-$query = "SELECT * FROM your_table";
-$result = $conn->query($query);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-$data = [];
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-echo json_encode($data);
+// Fetch product data
+$sql = "SELECT id, name, description, discountPrice, price, image, rating FROM products";
+$result = $conn->query($sql);
+
+$products = [];
+
+if ($result->num_rows > 0) {
+    // Fetch all products and add to an array
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
+
+// Set the header to specify JSON format and send the data as JSON
+header('Content-Type: application/json');
+echo json_encode($products);
+
+// Close the connection
+$conn->close();
 ?>

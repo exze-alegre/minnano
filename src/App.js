@@ -1,22 +1,16 @@
+// App.js
 import React from "react";
-import { Routes, Route } from "react-router-dom"; // Import Routes and Route for routing
-import Card from "./components/common/Card"; // Example of a component
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./components/pages/HomePage";
 
-const App = () => {
+function App() {
   return (
     <div className="App">
-      <h1>Welcome to My App</h1>
       <Routes>
-        {/* Define your routes here */}
-        <Route path="/" element={<Home />} />
-        <Route path="/card" element={<Card />} />
+        <Route path="/" element={<HomePage />} />
       </Routes>
     </div>
   );
-};
-
-const Home = () => {
-  return <div>Welcome to the Home page!</div>;
-};
+}
 
 export default App;
