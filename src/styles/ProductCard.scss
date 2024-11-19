@@ -1,3 +1,5 @@
+//ProductCard.scss
+
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
@@ -5,11 +7,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 .product-card {
-  // font-family: 'Your Font Name', sans-serif; // Change this to the desired font
+  border: none !important; // Ensure there is no border
+  box-shadow: none !important; // Remove shadow from the card
+  background-color: transparent; // Make card background transparent
 
   .card-title {
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
     font-family: "Lora", sans-serif;
     white-space: nowrap; // Prevent wrapping of text
     overflow: hidden; // Hide overflowing text
@@ -36,24 +40,29 @@
   }
 
   .card-footer {
+    border-top: none !important; // Remove border from footer
     padding: 0; // Optional: remove padding from footer to reduce space
+    background-color: transparent !important; // Ensure no background in footer
   }
 
   .card-body {
-    padding-bottom: 0; // Reduce bottom padding for better spacing control
+    padding: 0; // Reduce padding for better spacing control
   }
 
   .star-icons {
     display: flex;
     gap: 5px;
     margin-top: 0;
+    background-color: transparent !important; // Ensure no background color for the stars
 
     .filled-star {
       color: $yellow-400; // Use Bootstrap's $yellow-400 variable
+      background-color: transparent; // Remove any background from filled stars
     }
 
     .empty-star {
       color: gray; // Style empty stars (gray)
+      background-color: transparent; // Remove any background from empty stars
     }
   }
 
@@ -62,7 +71,7 @@
     width: 100%;
     height: auto;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 10px; // Adjust radius or remove for square corners
   }
 
   /* For small image size */
@@ -70,6 +79,6 @@
     width: 60%;
     height: auto;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 10px; // Adjust radius or remove for square corners
   }
 }

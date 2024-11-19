@@ -1,3 +1,5 @@
+//ProductCard.js
+
 import React from "react";
 import { Card } from "react-bootstrap";
 import { FaStar, FaRegStar } from "react-icons/fa";
@@ -27,10 +29,7 @@ const ProductCard = ({ product, size = "medium" }) => {
   // <ProductCard product={product} size="large" />
 
   return (
-    <Card
-      style={{ width: "288px" }}
-      className="mx-auto my-3 shadow product-card"
-    >
+    <Card style={{ width: "288px" }} className="mx-auto my-3 product-card">
       <Card.Img variant="top" src={product.image} className={imageClass} />
       <Card.Body>
         <Card.Title>{product.name}</Card.Title>

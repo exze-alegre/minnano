@@ -1,9 +1,10 @@
 // components/pages/HomePage.js
 import React, { useState, useEffect } from "react";
 import ProductCard from "../common/ProductCard";
-import "../../styles/HomePage.scss"; // Assuming you have custom styles for the homepage
+import Header from "../common/Header";
+import "../../styles/Home.scss"; // Assuming you have custom styles for the homepage
 
-const HomePage = () => {
+const Home = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -27,7 +28,8 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-fluid p-0 m-0">
+      <Header />
       <h1>Product List</h1>
       <div className="product-list-container">
         {products.map((product) => (
@@ -38,4 +40,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

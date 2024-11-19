@@ -1,0 +1,66 @@
+//Header.scss
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sawarabi+Gothic&display=swap");
+
+.header {
+  width: 100vw;
+  background: white;
+  color: $red-500;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.25);
+
+  .navbar-brand {
+    font-size: 28px;
+    font-family: "Sawarabi Gothic", sans-serif;
+    color: $red-500;
+  }
+
+  .bottom-nav {
+    font-family: "Roboto Condensed", sans-serif;
+  }
+}
+
+// SCSS for custom styles
+.custom-search {
+  .form-control {
+    // Style for the input field
+    border-radius: 0.25rem;
+    padding-left: 10px;
+  }
+
+  .search-icon-bg {
+    background-color: $red-500;
+    color: white !important;
+    cursor: pointer;
+    border-radius: 0.25rem;
+
+    &:hover {
+      background-color: $red-700;
+    }
+
+    svg {
+      font-size: 1.2rem;
+    }
+  }
+
+  .search-icon {
+    color: white;
+  }
+}
+
+.custom-search .form-control::placeholder {
+  color: grey; // or any desired grey color
+}
+
+.custom-search .form-control:focus {
+  border-color: $red-400; // Change border to red-400 when focused
+  box-shadow: 0 0 0 0.25rem rgba($red-400, 0.25); // Optional: Add a subtle red shadow on focus
+}
+
+.likes,
+.basket {
+  font-size: 35px; // Set the icon size to 40px
+}

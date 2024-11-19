@@ -1,19 +1,11 @@
 // styles/HomePage.scss
-
 .product-list-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr); // Always 5 cards per row
   gap: 5px; // Optional: Space between cards
-  margin: 0 100px;
 }
 
 .product-card {
   max-width: 100%; // Ensure cards don't exceed the container width
   margin-bottom: 20px; // Spacing between rows of cards
-}
-
-.card-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; // Truncate text with ellipses if overflow
 }
