@@ -18,6 +18,11 @@
     color: $red-500;
   }
 
+  .navbar-brand:hover {
+    color: inherit; /* Prevent color change on hover */
+    text-decoration: none; /* Remove underline if any */
+  }
+
   .bottom-nav {
     font-family: "Roboto Condensed", sans-serif;
   }

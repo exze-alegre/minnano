@@ -17,9 +17,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch product data
-$sql = "SELECT id, name, description, discountPrice, price, image, rating FROM products";
-$result = $conn->query($sql);
+// Get search query from the request (if present)
+$searchQuery = isset($_GET['query']) ? $_GET['query'] : '';
+
+// Modify SQL query based on search query
+if ($searchQuery) {
+    // If a search query is provided, filter products based on the name or description
+    $sql = "SELECT id, name, description, discountPrice, price, image, rating FROM products WHERE name LIKE ? OR description LIKE ?";
+    $stmt = $conn->prepare($sql);
+    $searchTerm = "%" . $searchQuery . "%";  // Add wildcard for partial matching
+    $stmt->bind_param("ss", $searchTerm, $searchTerm);
+} else {
+    // If no search query, fetch all products
+    $sql = "SELECT id, name, description, discountPrice, price, image, rating FROM products";
+    $stmt = $conn->prepare($sql);
+}
+
+// Execute the query
+$stmt->execute();
+$result = $stmt->get_result();
 
 $products = [];
 
@@ -35,5 +51,6 @@ header('Content-Type: application/json');
 echo json_encode($products);
 
 // Close the connection
+$stmt->close();
 $conn->close();
 ?>

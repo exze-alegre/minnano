@@ -1,15 +1,12 @@
-// index.js (or main.js)
+// index.js
 import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router } from "react-router-dom"; // Import BrowserRouter here
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App"; // Make sure this is importing App correctly
 
-import App from "./App";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
-  </React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById("root") // This should match the div id in your public/index.html
 );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   FaSearch,
   FaRegHeart,
@@ -20,28 +21,20 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Header = ({ loggedIn, userProfile }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleSearch = async (e) => {
     e.preventDefault();
 
     if (searchQuery) {
-      const userId = loggedIn ? userProfile.id : null;
-
-      try {
-        const response = await fetch("http://localhost/saveSearch.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ search_query: searchQuery, user_id: userId }),
-        });
-
-        const result = await response.json();
-        console.log(result);
-      } catch (error) {
-        console.error("Error saving search query:", error);
-      }
+      // Redirect to the search results page with the query
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
+  };
+
+  // Function to navigate to homepage when brand is clicked
+  const handleBrandClick = () => {
+    navigate("/"); // Navigate to the homepage
   };
 
   return (
@@ -50,7 +43,10 @@ const Header = ({ loggedIn, userProfile }) => {
         {/* Top Header */}
         <Row className="w-100 align-items-center mb-3">
           <Col>
-            <Navbar.Brand href="#Home">
+            <Navbar.Brand
+              onClick={handleBrandClick}
+              style={{ cursor: "pointer" }}
+            >
               <img
                 alt="Minnano"
                 src="https://via.placeholder.com/40"
