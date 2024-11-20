@@ -33,7 +33,7 @@ const Home = () => {
       <h1>Product List</h1>
       <div className="product-list-container">
         {products.map((product) => (
-          <ProductCard product={product} size="large" />
+          <ProductCard product={product} size="small" />
         ))}
       </div>
     </div>

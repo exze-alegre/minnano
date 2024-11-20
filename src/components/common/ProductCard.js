@@ -2,34 +2,31 @@
 
 import React from "react";
 import { Card } from "react-bootstrap";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import "../../styles/ProductCard.scss";
 
 const ProductCard = ({ product, size = "medium" }) => {
   const totalStars = 5;
   const rating = Math.round(product.rating);
 
+  // Dynamically assign classes based on the size prop
+  const cardClass = size === "large" ? "large-card" : "small-card";
+  const imageClass = size === "large" ? "large-img" : "small-img";
+
+  // Generate stars based on the rating
   const stars = [];
   for (let i = 1; i <= totalStars; i++) {
     stars.push(
       i <= rating ? (
         <FaStar key={i} className="filled-star" />
       ) : (
-        <FaRegStar key={i} className="empty-star" />
+        <FaStar key={i} className="empty-star" />
       )
     );
   }
 
-  // Adjust the image size based on the "size" prop
-  const imageClass = size === "large" ? "large-img" : "small-img";
-
-  // Home page
-  // <ProductCard product={product} size="small" />
-  // Search Page
-  // <ProductCard product={product} size="large" />
-
   return (
-    <Card style={{ width: "288px" }} className="mx-auto my-3 product-card">
+    <Card className={`product-card ${cardClass} mx-auto my-3`}>
       <Card.Img variant="top" src={product.image} className={imageClass} />
       <Card.Body>
         <Card.Title>{product.name}</Card.Title>

@@ -1,5 +1,3 @@
-//ProductCard.scss
-
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
@@ -7,78 +5,121 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 .product-card {
-  border: none !important; // Ensure there is no border
-  box-shadow: none !important; // Remove shadow from the card
-  background-color: transparent; // Make card background transparent
+  border: none !important; // Ensure no border
+  box-shadow: none !important; // Remove shadow
+  background-color: transparent; // Transparent background
+  margin: 0 auto;
 
-  .card-title {
-    margin: 0;
-    font-size: 18px;
-    font-family: "Lora", sans-serif;
-    white-space: nowrap; // Prevent wrapping of text
-    overflow: hidden; // Hide overflowing text
-    text-overflow: ellipsis; // Add '...' when text overflows
+  // Card container styles
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; // Space between cards
+    justify-content: center;
+    margin: 20px;
   }
 
-  .card-text {
-    display: inline;
-    vertical-align: middle;
+  // Shared styles for titles, text, and prices
+  .card-title {
+    margin: 0;
+    font-family: "Lora", sans-serif;
+    white-space: nowrap; // Prevent wrapping
+    overflow: hidden; // Hide overflowing text
+    text-overflow: ellipsis; // Add "..."
+  }
+
+  .card-text,
+  .price,
+  .discount {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
   }
 
   .discount {
-    margin: 0; // Remove margins around title and description
     font-size: 20px;
     color: $cyan-300;
-    font-family: "Roboto", sans-serif;
   }
 
   .price {
-    margin: 0 5px 0; // Remove margins around title and description
+    margin: 0 5px;
     font-size: 16px;
     color: lightgray;
-    font-family: "Roboto", sans-serif;
   }
 
   .card-footer {
-    border-top: none !important; // Remove border from footer
-    padding: 0; // Optional: remove padding from footer to reduce space
-    background-color: transparent !important; // Ensure no background in footer
+    border-top: none !important; // Remove border
+    padding: 0;
+    background-color: transparent !important;
   }
 
   .card-body {
-    padding: 0; // Reduce padding for better spacing control
+    padding: 0; // Reduce padding
   }
 
+  // Star icons
   .star-icons {
     display: flex;
     gap: 5px;
     margin-top: 0;
-    background-color: transparent !important; // Ensure no background color for the stars
+    background-color: transparent !important;
 
     .filled-star {
-      color: $yellow-400; // Use Bootstrap's $yellow-400 variable
-      background-color: transparent; // Remove any background from filled stars
+      color: $yellow-400; // Filled star color
     }
 
     .empty-star {
-      color: gray; // Style empty stars (gray)
-      background-color: transparent; // Remove any background from empty stars
+      color: lightgray; // Empty star color
     }
   }
 
-  /* For large image size */
+  // Image styles
   .large-img {
     width: 100%;
     height: auto;
     object-fit: cover;
-    border-radius: 10px; // Adjust radius or remove for square corners
+    border-radius: 10px; // Rounded corners
   }
 
-  /* For small image size */
   .small-img {
-    width: 60%;
-    height: auto;
+    width: 200px; // Fixed size for the image
+    height: auto; // Maintain aspect ratio
     object-fit: cover;
-    border-radius: 10px; // Adjust radius or remove for square corners
+    border-radius: 8px; // Slightly smaller radius
+  }
+
+  // Large card styles
+  &.large-card {
+    width: 300px; // Larger width
+    padding: 15px;
+
+    .card-title {
+      font-size: 20px; // Larger title font
+    }
+
+    .discount {
+      font-size: 22px; // Larger discount font
+    }
+
+    .price {
+      font-size: 18px; // Larger original price font
+    }
+  }
+
+  // Small card styles
+  &.small-card {
+    width: 200px; // Smaller width
+    padding: 10px;
+
+    .card-title {
+      font-size: 16px; // Smaller title font
+    }
+
+    .discount {
+      font-size: 18px; // Smaller discount font
+    }
+
+    .price {
+      font-size: 14px; // Smaller original price font
+    }
   }
 }
