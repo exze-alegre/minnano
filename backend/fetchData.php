@@ -30,7 +30,7 @@ if ($searchQuery) {
     }
     $whereClauseStr = implode(' OR ', $whereClause);
 
-    $sql = "SELECT DISTINCT p.id, p.name, p.description, p.discountPrice, p.price, p.image, p.rating 
+    $sql = "SELECT DISTINCT p.id, p.name, p.description, p.discountPrice, p.price, p.image1, p.image2, p.image3, p.image4, p.image5, p.rating 
             FROM products p
             LEFT JOIN product_tags pt ON pt.product_id = p.id
             LEFT JOIN tags t ON t.id = pt.tag_id
@@ -49,7 +49,7 @@ if ($searchQuery) {
     }
     $stmt->bind_param($paramTypes, ...$paramValues);
 } else {
-    $sql = "SELECT id, name, description, discountPrice, price, image, rating FROM products";
+    $sql = "SELECT id, name, description, discountPrice, price, image1, image2, image3, image4, image5, rating FROM products";
     $stmt = $conn->prepare($sql);
 }
 
@@ -61,6 +61,7 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $productId = $row['id'];
 
+        // Get product tags if requested
         if ($includeTags) {
             $tagsSql = "SELECT t.name FROM tags t
                         JOIN product_tags pt ON pt.tag_id = t.id
@@ -73,6 +74,7 @@ if ($result->num_rows > 0) {
             $tagsStmt->close();
         }
 
+        // Get product variations if requested
         if ($includeVariations) {
             $variationsSql = "SELECT v.id, v.name, v.price, v.discount_price, v.image 
                               FROM variations v WHERE v.product_id = ?";

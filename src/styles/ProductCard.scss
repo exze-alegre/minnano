@@ -5,27 +5,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 .product-card {
-  border: none !important; // Ensure no border
-  box-shadow: none !important; // Remove shadow
-  background-color: transparent; // Transparent background
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent;
   margin: 0 auto;
-
-  // Card container styles
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px; // Space between cards
-    justify-content: center;
-    margin: 20px;
-  }
+  cursor: pointer;
 
   // Shared styles for titles, text, and prices
   .card-title {
     margin: 0;
     font-family: "Lora", sans-serif;
-    white-space: nowrap; // Prevent wrapping
-    overflow: hidden; // Hide overflowing text
-    text-overflow: ellipsis; // Add "..."
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .card-text,
@@ -33,6 +25,13 @@
   .discount {
     margin: 0;
     font-family: "Roboto", sans-serif;
+  }
+
+  // Ensure discount and price are aligned on the same line
+  .discount,
+  .price {
+    display: inline-block; /* Align them on the same line */
+    margin-right: 5px; /* Space between the two */
   }
 
   .discount {
@@ -44,32 +43,29 @@
     margin: 0 5px;
     font-size: 16px;
     color: lightgray;
+    text-decoration: line-through; /* Strike-through style for the original price */
   }
 
   .card-footer {
-    border-top: none !important; // Remove border
+    border-top: none !important;
     padding: 0;
     background-color: transparent !important;
   }
-
-  .card-body {
-    padding: 0; // Reduce padding
+  .stars-rating-container {
+    display: flex;
+    align-items: center; /* Centers vertically */
+    gap: 8px; /* Adjust spacing between stars and rating */
   }
 
-  // Star icons
-  .star-icons {
-    display: flex;
-    gap: 5px;
-    margin-top: 0;
-    background-color: transparent !important;
+  .rating-text {
+    line-height: 1; /* Ensures text height doesn't add misalignment */
+    display: flex; /* Ensure alignment inside flex context */
+    align-items: center; /* Align text vertically to stars */
+    color: $secondary;
+  }
 
-    .filled-star {
-      color: $yellow-400; // Filled star color
-    }
-
-    .empty-star {
-      color: lightgray; // Empty star color
-    }
+  .card-body {
+    padding: 0;
   }
 
   // Image styles
@@ -77,49 +73,58 @@
     width: 100%;
     height: auto;
     object-fit: cover;
-    border-radius: 10px; // Rounded corners
+    border-radius: 10px;
   }
 
   .small-img {
-    width: 200px; // Fixed size for the image
-    height: auto; // Maintain aspect ratio
+    width: 200px;
+    height: auto;
     object-fit: cover;
-    border-radius: 8px; // Slightly smaller radius
+    border-radius: 8px;
   }
 
   // Large card styles
   &.large-card {
-    width: 300px; // Larger width
+    width: 300px;
     padding: 15px;
 
     .card-title {
-      font-size: 20px; // Larger title font
+      font-size: 20px;
     }
 
     .discount {
-      font-size: 22px; // Larger discount font
+      font-size: 22px;
     }
 
     .price {
-      font-size: 18px; // Larger original price font
+      font-size: 18px;
     }
   }
 
   // Small card styles
   &.small-card {
-    width: 200px; // Smaller width
+    width: 200px;
     padding: 10px;
 
     .card-title {
-      font-size: 16px; // Smaller title font
+      font-size: 16px;
     }
 
     .discount {
-      font-size: 18px; // Smaller discount font
+      font-size: 18px;
     }
 
     .price {
-      font-size: 14px; // Smaller original price font
+      font-size: 14px;
     }
   }
+}
+
+.text-decoration-none {
+  text-decoration: none;
+  color: inherit; /* Keep the color consistent */
+}
+
+.text-decoration-none:hover {
+  color: #007bff; /* Change color on hover if needed */
 }

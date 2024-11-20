@@ -1,0 +1,45 @@
+.product-image-preview-wrapper {
+  display: flex; /* Use flexbox to layout the two containers */
+  align-items: flex-start; /* Align thumbnails at the top */
+}
+
+.product-image-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items to the top */
+  gap: 20px; /* Space between main image and thumbnails */
+}
+
+.thumbnail-container {
+  display: flex;
+  flex-direction: column; /* Stack thumbnails vertically */
+  gap: 10px; /* Space between each thumbnail */
+  justify-content: flex-start; /* Align thumbnails to the top */
+}
+
+.thumbnail {
+  width: 70px; /* Smaller thumbnail size */
+  height: 70px; /* Smaller thumbnail size */
+  object-fit: cover; /* Ensure the thumbnail covers the container */
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.thumbnail:hover {
+  transform: scale(1.1); /* Slightly enlarge the thumbnail on hover */
+}
+
+.main-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Full width */
+  max-width: 500px; /* Max width of the main image container */
+  height: 500px; /* Fixed height to match the main image */
+}
+
+.main-image {
+  width: 100%; /* Ensure image fits within the container */
+  height: 100%; /* Maintain aspect ratio */
+  object-fit: cover; /* Crop the image to cover the container */
+}

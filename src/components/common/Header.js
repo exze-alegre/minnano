@@ -1,3 +1,5 @@
+//Header.js
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import {
@@ -21,7 +23,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Header = ({ loggedIn, userProfile }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
