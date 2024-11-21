@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SearchResults from "./components/pages/SearchResult";
+import Basket from "./components/pages/Basket";
 import Home from "./components/pages/Home";
 import ProductPage from "./components/pages/ProductPage";
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/basket" element={<Basket />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product/:id" element={<ProductPage />} />
         </Routes>

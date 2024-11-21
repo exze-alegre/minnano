@@ -1,7 +1,5 @@
-//Header.js
-
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaRegHeart,
@@ -27,22 +25,22 @@ const Header = ({ loggedIn, userProfile }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-
     if (searchQuery) {
-      // Redirect to the search results page with the query
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
   };
 
-  // Function to navigate to homepage when brand is clicked
   const handleBrandClick = () => {
-    navigate("/"); // Navigate to the homepage
+    navigate("/");
+  };
+
+  const handleBasketClick = () => {
+    navigate("/basket"); // Absolute path
   };
 
   return (
     <Navbar expand="lg header pt-4">
       <Container className="d-flex flex-column">
-        {/* Top Header */}
         <Row className="w-100 align-items-center mb-3">
           <Col>
             <Navbar.Brand
@@ -90,14 +88,13 @@ const Header = ({ loggedIn, userProfile }) => {
               <Nav.Link href="#Likes">
                 <FaRegHeart className="likes" />
               </Nav.Link>
-              <Nav.Link href="#Basket">
+              <Nav.Link onClick={handleBasketClick}>
                 <FaShoppingBasket className="basket" />
               </Nav.Link>
             </div>
           </Col>
         </Row>
 
-        {/* Bottom Navigation */}
         <Row className="w-100 justify-content-md-center bottom-nav">
           <Col xs="auto">
             <Nav.Link href="#New">

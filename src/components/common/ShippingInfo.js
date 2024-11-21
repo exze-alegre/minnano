@@ -27,17 +27,12 @@ const ShippingInfo = ({ selectedCountry, setSelectedCountry }) => {
               <span>Free & Easy Returns</span>
             </div>
             <div className="info-item">
-              <i className="bi bi-truck"></i> {/* Icon for Shipping */}
               <span>Shipping Discount</span>
-              <span>for orders over ₱249</span>
             </div>
             <div className="info-item">
-              <i className="bi bi-box"></i> {/* Icon for Local Shipping */}
-              <span>Shipping to</span>
               <span>Shipped Locally</span>
             </div>
             <div className="info-item">
-              <i className="bi bi-credit-card"></i>{" "}
               {/* Icon for Shipping Fee */}
               <span>Shipping Fee</span>
             </div>
