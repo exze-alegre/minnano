@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -14,8 +14,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const ProductDetails = ({ product, addToCart }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedCountry, setSelectedCountry] = useState(""); // Country selection state
+  const [selectedVariation, setSelectedVariation] = useState(null); // No variation selected initially
+  const [selectedCountry, setSelectedCountry] = useState("");
   const rating = Math.round(product.rating);
+
+  useEffect(() => {
+    // Ensure no variation is selected and default data is rendered
+    setSelectedVariation(null); // No variation selected initially
+  }, [product]);
 
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -31,7 +37,9 @@ const ProductDetails = ({ product, addToCart }) => {
     const item = {
       id: product.id,
       name: product.name,
-      price: product.discountPrice,
+      price: selectedVariation
+        ? selectedVariation.discount_price
+        : product.discountPrice, // Use the default product price if no variation is selected
       quantity,
     };
     addToCart(item);
@@ -44,13 +52,23 @@ const ProductDetails = ({ product, addToCart }) => {
     }
   };
 
+  const handleVariationSelect = (variation) => {
+    setSelectedVariation(variation);
+  };
+
   return (
     <Container className="product-details-container">
       <Row className="justify-content-center">
         <Col>
           <h1>{product.name}</h1>
           <div className="price-container">
-            <h2 className="discount">₱{product.discountPrice}</h2>
+            <h2 className="discount">
+              ₱
+              {selectedVariation
+                ? selectedVariation.discount_price
+                : product.discountPrice}{" "}
+              {/* Show default product price if no variation is selected */}
+            </h2>
             <h2 className="price">
               <s>₱{product.price}</s>
             </h2>
@@ -59,16 +77,32 @@ const ProductDetails = ({ product, addToCart }) => {
             <span className="rating-text">{product.rating}</span>
             <Stars rating={rating} />
           </div>
+
+          {/* Dropdown for variations */}
           <DropdownButton
             id="variations"
-            title="Select A Variation"
+            title={
+              selectedVariation
+                ? selectedVariation.variation_name
+                : "Select A Variation" // Default title when no variation is selected
+            }
             className="dropdown-toggle mt-3"
             variant="light"
           >
-            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+            {product.variations && product.variations.length > 0 ? (
+              product.variations.map((variation) => (
+                <Dropdown.Item
+                  key={variation.id}
+                  onClick={() => handleVariationSelect(variation)}
+                >
+                  {variation.variation_name}
+                </Dropdown.Item>
+              ))
+            ) : (
+              <Dropdown.Item disabled>No variations available</Dropdown.Item>
+            )}
           </DropdownButton>
+
           <div className="quantity-container d-flex justify-content-between align-items-center mt-3">
             <Button
               onClick={decreaseQuantity}
