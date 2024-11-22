@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2024 at 02:14 AM
+-- Generation Time: Nov 22, 2024 at 04:12 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -28,10 +28,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `basket_items` (
-  `id` int(11) NOT NULL,
+  `basket_item_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
+  `variation_id` int(11) DEFAULT NULL,
+  `discount_price` decimal(10,2) NOT NULL,
+  `quantity` int(11) DEFAULT 1,
   `added_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -104,43 +106,6 @@ INSERT INTO `product_tags` (`product_id`, `tag_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `product_variations`
---
-
-CREATE TABLE `product_variations` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `variation_name` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `discount_price` decimal(10,2) NOT NULL,
-  `image_url` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `product_variations`
---
-
-INSERT INTO `product_variations` (`id`, `product_id`, `variation_name`, `price`, `discount_price`, `image_url`) VALUES
-(1, 1, 'Brown Bear Buddy', '500.00', '450.00', 'https://via.placeholder.com/255?text=Brown+Bear+Buddy'),
-(2, 1, 'Pink Bear Buddy', '500.00', '450.00', 'https://via.placeholder.com/255?text=Pink+Bear+Buddy'),
-(3, 2, 'Pink Unicorn Dream', '700.00', '650.00', 'https://via.placeholder.com/255?text=Pink+Unicorn+Dream'),
-(4, 2, 'Blue Unicorn Dream', '700.00', '650.00', 'https://via.placeholder.com/255?text=Blue+Unicorn+Dream'),
-(5, 3, 'Black Panda Pals', '299.99', '100.00', 'https://via.placeholder.com/255?text=Black+Panda+Pals'),
-(6, 3, 'White Panda Pals', '299.99', '100.00', 'https://via.placeholder.com/255?text=White+Panda+Pals'),
-(7, 4, 'Gray Kitty Cuddles', '400.00', '380.00', 'https://via.placeholder.com/255?text=Gray+Kitty+Cuddles'),
-(8, 4, 'White Kitty Cuddles', '400.00', '380.00', 'https://via.placeholder.com/255?text=White+Kitty+Cuddles'),
-(9, 5, 'White Bunny Hop', '600.00', '580.00', 'https://via.placeholder.com/255?text=White+Bunny+Hop'),
-(10, 5, 'Pink Bunny Hop', '600.00', '580.00', 'https://via.placeholder.com/255?text=Pink+Bunny+Hop'),
-(11, 6, 'Green Dragon Puff', '299.99', '200.00', 'https://via.placeholder.com/255?text=Green+Dragon+Puff'),
-(12, 6, 'Red Dragon Puff', '299.99', '200.00', 'https://via.placeholder.com/255?text=Red+Dragon+Puff'),
-(13, 7, 'Orange Foxy Friend', '520.00', '500.00', 'https://via.placeholder.com/255?text=Orange+Foxy+Friend'),
-(14, 7, 'Brown Foxy Friend', '520.00', '500.00', 'https://via.placeholder.com/255?text=Brown+Foxy+Friend'),
-(15, 8, 'Gray Elephant Hugs', '1200.00', '1100.00', 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs'),
-(16, 8, 'Pink Elephant Hugs', '1200.00', '1100.00', 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tags`
 --
 
@@ -169,13 +134,48 @@ INSERT INTO `tags` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `variations`
+--
+
+CREATE TABLE `variations` (
+  `variations_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `variation_name` varchar(255) NOT NULL,
+  `discount_price` decimal(10,2) NOT NULL,
+  `image_url` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `variations`
+--
+
+INSERT INTO `variations` (`variations_id`, `product_id`, `variation_name`, `discount_price`, `image_url`) VALUES
+(1, 1, 'Brown Bear Buddy', '451.00', 'https://via.placeholder.com/255?text=Brown+Bear+Buddy'),
+(2, 1, 'Pink Bear Buddy', '455.00', 'https://via.placeholder.com/255?text=Pink+Bear+Buddy'),
+(3, 2, 'Pink Unicorn Dream', '660.00', 'https://via.placeholder.com/255?text=Pink+Unicorn+Dream'),
+(4, 2, 'Blue Unicorn Dream', '653.00', 'https://via.placeholder.com/255?text=Blue+Unicorn+Dream'),
+(5, 3, 'Black Panda Pals', '95.00', 'https://via.placeholder.com/255?text=Black+Panda+Pals'),
+(6, 3, 'White Panda Pals', '98.00', 'https://via.placeholder.com/255?text=White+Panda+Pals'),
+(7, 4, 'Gray Kitty Cuddles', '376.00', 'https://via.placeholder.com/255?text=Gray+Kitty+Cuddles'),
+(8, 4, 'White Kitty Cuddles', '374.00', 'https://via.placeholder.com/255?text=White+Kitty+Cuddles'),
+(9, 5, 'White Bunny Hop', '575.00', 'https://via.placeholder.com/255?text=White+Bunny+Hop'),
+(10, 5, 'Pink Bunny Hop', '582.00', 'https://via.placeholder.com/255?text=Pink+Bunny+Hop'),
+(11, 6, 'Green Dragon Puff', '194.00', 'https://via.placeholder.com/255?text=Green+Dragon+Puff'),
+(12, 6, 'Red Dragon Puff', '196.00', 'https://via.placeholder.com/255?text=Red+Dragon+Puff'),
+(13, 7, 'Orange Foxy Friend', '508.00', 'https://via.placeholder.com/255?text=Orange+Foxy+Friend'),
+(14, 7, 'Brown Foxy Friend', '498.00', 'https://via.placeholder.com/255?text=Brown+Foxy+Friend'),
+(15, 8, 'Gray Elephant Hugs', '1097.00', 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs'),
+(16, 8, 'Pink Elephant Hugs', '1101.00', 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs');
 
 --
 -- Indexes for dumped tables
@@ -185,9 +185,10 @@ CREATE TABLE `users` (
 -- Indexes for table `basket_items`
 --
 ALTER TABLE `basket_items`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`basket_item_id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `product_id` (`product_id`);
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `variation_id` (`variation_id`);
 
 --
 -- Indexes for table `products`
@@ -203,13 +204,6 @@ ALTER TABLE `product_tags`
   ADD KEY `tag_id` (`tag_id`);
 
 --
--- Indexes for table `product_variations`
---
-ALTER TABLE `product_variations`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`);
-
---
 -- Indexes for table `tags`
 --
 ALTER TABLE `tags`
@@ -219,8 +213,16 @@ ALTER TABLE `tags`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `variations`
+--
+ALTER TABLE `variations`
+  ADD PRIMARY KEY (`variations_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -230,19 +232,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `basket_items`
 --
 ALTER TABLE `basket_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `basket_item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `product_variations`
---
-ALTER TABLE `product_variations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -254,7 +250,13 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `variations`
+--
+ALTER TABLE `variations`
+  MODIFY `variations_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
@@ -264,8 +266,9 @@ ALTER TABLE `users`
 -- Constraints for table `basket_items`
 --
 ALTER TABLE `basket_items`
-  ADD CONSTRAINT `basket_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `basket_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `basket_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `basket_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `basket_items_ibfk_3` FOREIGN KEY (`variation_id`) REFERENCES `variations` (`variations_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `product_tags`
@@ -275,10 +278,10 @@ ALTER TABLE `product_tags`
   ADD CONSTRAINT `product_tags_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`);
 
 --
--- Constraints for table `product_variations`
+-- Constraints for table `variations`
 --
-ALTER TABLE `product_variations`
-  ADD CONSTRAINT `product_variations_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+ALTER TABLE `variations`
+  ADD CONSTRAINT `variations_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
