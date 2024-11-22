@@ -1,23 +1,40 @@
-import React, { useState } from "react";
-import "../../styles/ProductImagePreview.scss"; // Import your SCSS file for styling
+import React, { useState, useEffect } from "react";
+import "../../styles/ProductImagePreview.scss";
 
-const ProductImagePreview = ({ product }) => {
-  // Create an array with all 5 images for the product
-  const images = [
-    product.image1,
-    product.image2,
-    product.image3,
-    product.image4,
-    product.image5,
-  ];
+const ProductImagePreview = ({ product, selectedVariation }) => {
+  // Collect product images (image1, image2, image3) always visible in thumbnails
+  const productImages = [product.image1, product.image2, product.image3];
 
-  // Default to the first image, or a placeholder if images are empty
-  const [selectedImage, setSelectedImage] = useState(
-    images[0] || "https://via.placeholder.com/571x536?text=Main+Image"
-  );
+  // Collect variation images for each variation (if any)
+  const variationImages =
+    product.variations?.map((variation) => variation.image) || [];
+
+  // Combine product images and variation images (max 5 thumbnails)
+  const images = [...productImages, ...variationImages].slice(0, 5); // Ensure there are no more than 5 thumbnails
+
+  // Set the main image, starting with product image1
+  const [selectedImage, setSelectedImage] = useState(product.image1);
+
+  useEffect(() => {
+    if (selectedVariation && selectedVariation.image) {
+      setSelectedImage(selectedVariation.image);
+    }
+  }, [selectedVariation]);
 
   const handleThumbnailClick = (image) => {
-    setSelectedImage(image); // Update the main image when a thumbnail is clicked
+    setSelectedImage(image);
+  };
+
+  const handlePrevImage = () => {
+    const currentIndex = images.indexOf(selectedImage);
+    const prevIndex = (currentIndex - 1 + images.length) % images.length;
+    setSelectedImage(images[prevIndex]);
+  };
+
+  const handleNextImage = () => {
+    const currentIndex = images.indexOf(selectedImage);
+    const nextIndex = (currentIndex + 1) % images.length;
+    setSelectedImage(images[nextIndex]);
   };
 
   if (images.length === 0) {
@@ -31,20 +48,38 @@ const ProductImagePreview = ({ product }) => {
   return (
     <div className="product-image-preview-wrapper">
       <div className="product-image-preview-container">
+        {/* Thumbnails Container */}
         <div className="thumbnail-container">
-          {/* Render thumbnails for all 5 images */}
           {images.map((image, index) => (
             <img
               key={index}
               src={image}
               alt={`Thumbnail ${index + 1}`}
-              className="thumbnail"
-              onClick={() => handleThumbnailClick(image)} // Change the main image on thumbnail click
+              className={`thumbnail ${
+                image === selectedImage ? "selected" : ""
+              }`}
+              onClick={() => handleThumbnailClick(image)}
             />
           ))}
         </div>
+
+        {/* Main Image Container with Navigation Buttons */}
         <div className="main-image-container">
+          <button
+            className="prev-button"
+            onClick={handlePrevImage}
+            aria-label="Previous Image"
+          >
+            &lt;
+          </button>
           <img src={selectedImage} alt="Main product" className="main-image" />
+          <button
+            className="next-button"
+            onClick={handleNextImage}
+            aria-label="Next Image"
+          >
+            &gt;
+          </button>
         </div>
       </div>
     </div>

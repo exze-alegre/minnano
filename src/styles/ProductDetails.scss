@@ -111,3 +111,25 @@ h1 {
     background-color: $red-700;
   }
 }
+
+/* Dropdown */
+.product-details-container .dropdown {
+  width: 100%;
+}
+
+.product-details-container .dropdown-toggle {
+  display: block;
+  width: 100%;
+  text-align: left; // Align text to match Bootstrap's dropdown default style
+}
+
+.product-details-container .dropdown-menu {
+  width: 100%; // Ensures the dropdown menu matches the button's width
+  border-radius: 0; // Optional: Removes rounded corners for a flush look
+}
+
+.product-details-container .dropdown-item {
+  width: 100%; // Ensures the dropdown items take up full width
+  text-align: left; // Optional: Aligns text to the left
+  padding: 10px; // Adjust padding for better spacing
+}

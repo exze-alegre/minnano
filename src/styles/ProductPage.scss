@@ -2,10 +2,6 @@ body {
   overflow-x: hidden; /* Prevent horizontal scrolling globally */
 }
 
-.product-page-container {
-  padding: 0 100px;
-}
-
 .product-page-row {
   display: flex;
   justify-content: space-between;
@@ -21,8 +17,8 @@ body {
 
 .detail-column {
   flex: 1;
-  max-width: 40%; /* Ensures equal width for both columns */
-  padding: 15px;
+  max-width: 38%; /* Ensures equal width for both columns */
+  padding: 15px 0;
   box-sizing: border-box; /* Prevents padding from affecting the column width */
 }
 

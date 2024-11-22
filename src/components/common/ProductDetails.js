@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  DropdownButton,
-  Dropdown,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import Stars from "./Stars";
 import ShippingInfo from "./ShippingInfo";
+import CustomDropdown from "./CustomDropdown";
 import "../../styles/ProductDetails.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ProductDetails = ({ product, addToCart }) => {
+const ProductDetails = ({
+  product,
+  addToCart,
+  selectedVariation,
+  onVariationSelect,
+}) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariation, setSelectedVariation] = useState(null); // No variation selected initially
-  const [selectedCountry, setSelectedCountry] = useState("");
   const rating = Math.round(product.rating);
 
   useEffect(() => {
-    // Ensure no variation is selected and default data is rendered
-    setSelectedVariation(null); // No variation selected initially
-  }, [product]);
+    if (selectedVariation) {
+      setQuantity(1); // Reset quantity when variation is selected
+    }
+  }, [selectedVariation]);
+
+  // Log selectedVariation for debugging
+  console.log("Selected Variation in ProductDetails: ", selectedVariation);
 
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -39,7 +40,7 @@ const ProductDetails = ({ product, addToCart }) => {
       name: product.name,
       price: selectedVariation
         ? selectedVariation.discount_price
-        : product.discountPrice, // Use the default product price if no variation is selected
+        : product.discountPrice,
       quantity,
     };
     addToCart(item);
@@ -52,10 +53,6 @@ const ProductDetails = ({ product, addToCart }) => {
     }
   };
 
-  const handleVariationSelect = (variation) => {
-    setSelectedVariation(variation);
-  };
-
   return (
     <Container className="product-details-container">
       <Row className="justify-content-center">
@@ -66,8 +63,7 @@ const ProductDetails = ({ product, addToCart }) => {
               ₱
               {selectedVariation
                 ? selectedVariation.discount_price
-                : product.discountPrice}{" "}
-              {/* Show default product price if no variation is selected */}
+                : product.discountPrice}
             </h2>
             <h2 className="price">
               <s>₱{product.price}</s>
@@ -78,30 +74,15 @@ const ProductDetails = ({ product, addToCart }) => {
             <Stars rating={rating} />
           </div>
 
-          {/* Dropdown for variations */}
-          <DropdownButton
-            id="variations"
+          <CustomDropdown
             title={
               selectedVariation
                 ? selectedVariation.variation_name
-                : "Select A Variation" // Default title when no variation is selected
+                : "Select A Variation"
             }
-            className="dropdown-toggle mt-3"
-            variant="light"
-          >
-            {product.variations && product.variations.length > 0 ? (
-              product.variations.map((variation) => (
-                <Dropdown.Item
-                  key={variation.id}
-                  onClick={() => handleVariationSelect(variation)}
-                >
-                  {variation.variation_name}
-                </Dropdown.Item>
-              ))
-            ) : (
-              <Dropdown.Item disabled>No variations available</Dropdown.Item>
-            )}
-          </DropdownButton>
+            items={product.variations}
+            onSelect={onVariationSelect} // Use passed down onSelect function
+          />
 
           <div className="quantity-container d-flex justify-content-between align-items-center mt-3">
             <Button
@@ -130,11 +111,7 @@ const ProductDetails = ({ product, addToCart }) => {
             Add to Cart
           </Button>
 
-          {/* Replaced Accordion with new component */}
-          <ShippingInfo
-            selectedCountry={selectedCountry}
-            setSelectedCountry={setSelectedCountry}
-          />
+          <ShippingInfo />
         </Col>
       </Row>
     </Container>

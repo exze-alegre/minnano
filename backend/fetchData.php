@@ -78,7 +78,7 @@ function getProductDetails($conn, $searchQuery, $includeTags, $includeUserData, 
                 "variation_id" => $variation['variations_id'],
                 "variation_name" => $variation['variation_name'],
                 "discount_price" => $variation['discount_price'],
-                "image_url" => $variation['image_url']
+                "image" => $variation['image']  // Updated column name here
             ];
         }
 

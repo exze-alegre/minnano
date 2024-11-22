@@ -1,0 +1,47 @@
+/* BackButton.scss */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+/* BackButton.scss */
+
+.back-button-container {
+  display: flex;
+  align-items: center; /* Center both the button and the text vertically */
+  gap: 10px; /* Space between the button and the text */
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Square size for the button */
+  height: 50px; /* Square size for the button */
+  border-radius: 50%; /* Make it round */
+  border: none; /* Remove border */
+  background-color: transparent; /* Remove background color */
+  padding: 8px; /* Padding around the icon */
+  transition: transform 0.3s ease, color 0.3s ease; /* Smooth transition */
+  cursor: pointer; /* Pointer cursor to indicate it's clickable */
+}
+
+.back-button:hover {
+  transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+.icon {
+  font-size: 20px; /* Icon size */
+  color: lightgrey; /* Set icon color to light grey */
+}
+
+.button-text {
+  font-size: 14px; /* Text size */
+  color: gray; /* Set text color to light grey */
+  font-weight: 600; /* Optional: make text bold */
+  cursor: pointer; /* Pointer cursor to indicate text is clickable */
+}
+
+.button-text:hover {
+  /* Removed the text-decoration: underline */
+  color: gray; /* Keep the color unchanged on hover */
+}
