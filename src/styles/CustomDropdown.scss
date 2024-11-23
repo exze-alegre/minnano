@@ -1,0 +1,23 @@
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 15px;
+
+  /* Remove the triangle (dropdown arrow) under the dropdown button */
+  &::after {
+    display: none;
+  }
+}
+
+.custom-dropdown .dropdown-menu {
+  width: 100%; // Ensure the dropdown menu matches the button's width
+  border-radius: 0; // Optional: Removes rounded corners for a flush look
+}
+
+.custom-dropdown .dropdown-item {
+  width: 100%; // Ensure the dropdown items take up full width
+  text-align: left; // Aligns text to the left
+  padding: 10px; // Adjust padding for better spacing
+}
