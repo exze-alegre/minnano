@@ -1,17 +1,17 @@
+-- Create the database if it does not exist
+CREATE DATABASE IF NOT EXISTS minnano;
+
+-- Use the database
+USE minnano;
+
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2024 at 01:53 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
--- Create the database if it doesn't exist
-
--- Create the database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS `minnano`;
-USE `minnano`;
-
+-- Generation Time: Nov 23, 2024 at 07:33 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `basket_items`
 --
 
-
 CREATE TABLE `basket_items` (
   `basket_item_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -43,6 +42,13 @@ CREATE TABLE `basket_items` (
   `quantity` int(11) DEFAULT 1,
   `added_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `basket_items`
+--
+
+INSERT INTO `basket_items` (`basket_item_id`, `user_id`, `product_id`, `variation_id`, `discount_price`, `quantity`, `added_at`) VALUES
+(94, 1, 4, 8, 374.00, 1, '2024-11-23 11:30:05');
 
 -- --------------------------------------------------------
 
@@ -59,24 +65,22 @@ CREATE TABLE `products` (
   `rating` decimal(3,2) DEFAULT NULL CHECK (`rating` between 0 and 5),
   `image1` text DEFAULT NULL,
   `image2` text DEFAULT NULL,
-  `image3` text DEFAULT NULL,
-  `image4` text DEFAULT NULL,
-  `image5` text DEFAULT NULL
+  `image3` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `description`, `price`, `discountPrice`, `rating`, `image1`, `image2`, `image3`, `image4`, `image5`) VALUES
-(1, 'Bear Buddy Bestfriend Bayot', 'A soft and cuddly bear plush toy, perfect for kids and collectors.', '500.00', '450.00', '4.80', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(2, 'Unicorn Dream', 'A magical unicorn plush with sparkly horn and rainbow mane.', '700.00', '650.00', '4.90', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(3, 'Panda Pals', 'Adorable panda plush with bamboo accessory.', '299.99', '100.00', '4.70', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(4, 'Kitty Cuddles', 'A small kitten plush with a playful pose.', '400.00', '380.00', '4.50', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(5, 'Bunny Hop', 'Cute bunny plush with floppy ears and soft fur.', '600.00', '580.00', '4.60', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(6, 'Dragon Puff', 'A fierce but friendly dragon plush with detailed wings.', '299.99', '200.00', '3.80', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(7, 'Foxy Friend', 'Charming fox plush with a bushy tail and sly expression.', '520.00', '500.00', '4.40', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5'),
-(8, 'Elephant Hugs', 'A large elephant plush toy with soft gray fur.', '1200.00', '1100.00', '4.80', 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3', 'https://via.placeholder.com/255?text=Image+4', 'https://via.placeholder.com/255?text=Image+5');
+INSERT INTO `products` (`id`, `name`, `description`, `price`, `discountPrice`, `rating`, `image1`, `image2`, `image3`) VALUES
+(1, 'Bear Buddy Bestfriend Bayot', 'A soft and cuddly bear plush toy, perfect for kids and collectors.', 500.00, 450.00, 4.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(2, 'Unicorn Dream', 'A magical unicorn plush with sparkly horn and rainbow mane.', 700.00, 650.00, 4.90, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(3, 'Panda Pals', 'Adorable panda plush with bamboo accessory.', 299.99, 100.00, 4.70, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(4, 'Kitty Cuddles', 'A small kitten plush with a playful pose.', 400.00, 380.00, 4.50, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(5, 'Bunny Hop', 'Cute bunny plush with floppy ears and soft fur.', 600.00, 580.00, 4.60, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(6, 'Dragon Puff', 'A fierce but friendly dragon plush with detailed wings.', 299.99, 200.00, 3.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(7, 'Foxy Friend', 'Charming fox plush with a bushy tail and sly expression.', 520.00, 500.00, 4.40, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(8, 'Elephant Hugs', 'A large elephant plush toy with soft gray fur.', 1200.00, 1100.00, 4.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3');
 
 -- --------------------------------------------------------
 
@@ -148,6 +152,13 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `created_at`) VALUES
+(1, 'Kairu', 'projectemail@mail.com', 'minnano123', '2024-11-23 07:22:08');
+
 -- --------------------------------------------------------
 
 --
@@ -167,22 +178,22 @@ CREATE TABLE `variations` (
 --
 
 INSERT INTO `variations` (`variations_id`, `product_id`, `variation_name`, `discount_price`, `image`) VALUES
-(1, 1, 'Brown Bear Buddy', '451.00', 'https://via.placeholder.com/255?text=Brown+Bear+Buddy'),
-(2, 1, 'Pink Bear Buddy', '455.00', 'https://via.placeholder.com/255?text=Pink+Bear+Buddy'),
-(3, 2, 'Pink Unicorn Dream', '660.00', 'https://via.placeholder.com/255?text=Pink+Unicorn+Dream'),
-(4, 2, 'Blue Unicorn Dream', '653.00', 'https://via.placeholder.com/255?text=Blue+Unicorn+Dream'),
-(5, 3, 'Black Panda Pals', '95.00', 'https://via.placeholder.com/255?text=Black+Panda+Pals'),
-(6, 3, 'White Panda Pals', '98.00', 'https://via.placeholder.com/255?text=White+Panda+Pals'),
-(7, 4, 'Gray Kitty Cuddles', '376.00', 'https://via.placeholder.com/255?text=Gray+Kitty+Cuddles'),
-(8, 4, 'White Kitty Cuddles', '374.00', 'https://via.placeholder.com/255?text=White+Kitty+Cuddles'),
-(9, 5, 'White Bunny Hop', '575.00', 'https://via.placeholder.com/255?text=White+Bunny+Hop'),
-(10, 5, 'Pink Bunny Hop', '582.00', 'https://via.placeholder.com/255?text=Pink+Bunny+Hop'),
-(11, 6, 'Green Dragon Puff', '194.00', 'https://via.placeholder.com/255?text=Green+Dragon+Puff'),
-(12, 6, 'Red Dragon Puff', '196.00', 'https://via.placeholder.com/255?text=Red+Dragon+Puff'),
-(13, 7, 'Orange Foxy Friend', '508.00', 'https://via.placeholder.com/255?text=Orange+Foxy+Friend'),
-(14, 7, 'Brown Foxy Friend', '498.00', 'https://via.placeholder.com/255?text=Brown+Foxy+Friend'),
-(15, 8, 'Gray Elephant Hugs', '1097.00', 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs'),
-(16, 8, 'Pink Elephant Hugs', '1101.00', 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs');
+(1, 1, 'Brown Bear Buddy', 451.00, 'https://via.placeholder.com/255?text=Brown+Bear+Buddy'),
+(2, 1, 'Pink Bear Buddy', 455.00, 'https://via.placeholder.com/255?text=Pink+Bear+Buddy'),
+(3, 2, 'Pink Unicorn Dream', 660.00, 'https://via.placeholder.com/255?text=Pink+Unicorn+Dream'),
+(4, 2, 'Blue Unicorn Dream', 653.00, 'https://via.placeholder.com/255?text=Blue+Unicorn+Dream'),
+(5, 3, 'Black Panda Pals', 95.00, 'https://via.placeholder.com/255?text=Black+Panda+Pals'),
+(6, 3, 'White Panda Pals', 98.00, 'https://via.placeholder.com/255?text=White+Panda+Pals'),
+(7, 4, 'Gray Kitty Cuddles', 376.00, 'https://via.placeholder.com/255?text=Gray+Kitty+Cuddles'),
+(8, 4, 'White Kitty Cuddles', 374.00, 'https://via.placeholder.com/255?text=White+Kitty+Cuddles'),
+(9, 5, 'White Bunny Hop', 575.00, 'https://via.placeholder.com/255?text=White+Bunny+Hop'),
+(10, 5, 'Pink Bunny Hop', 582.00, 'https://via.placeholder.com/255?text=Pink+Bunny+Hop'),
+(11, 6, 'Green Dragon Puff', 194.00, 'https://via.placeholder.com/255?text=Green+Dragon+Puff'),
+(12, 6, 'Red Dragon Puff', 196.00, 'https://via.placeholder.com/255?text=Red+Dragon+Puff'),
+(13, 7, 'Orange Foxy Friend', 508.00, 'https://via.placeholder.com/255?text=Orange+Foxy+Friend'),
+(14, 7, 'Brown Foxy Friend', 498.00, 'https://via.placeholder.com/255?text=Brown+Foxy+Friend'),
+(15, 8, 'Gray Elephant Hugs', 1097.00, 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs'),
+(16, 8, 'Pink Elephant Hugs', 1101.00, 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs');
 
 --
 -- Indexes for dumped tables
@@ -192,10 +203,7 @@ INSERT INTO `variations` (`variations_id`, `product_id`, `variation_name`, `disc
 -- Indexes for table `basket_items`
 --
 ALTER TABLE `basket_items`
-  ADD PRIMARY KEY (`basket_item_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `variation_id` (`variation_id`);
+  ADD PRIMARY KEY (`basket_item_id`);
 
 --
 -- Indexes for table `products`
@@ -239,7 +247,7 @@ ALTER TABLE `variations`
 -- AUTO_INCREMENT for table `basket_items`
 --
 ALTER TABLE `basket_items`
-  MODIFY `basket_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `basket_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -257,7 +265,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `variations`
@@ -268,14 +276,6 @@ ALTER TABLE `variations`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `basket_items`
---
-ALTER TABLE `basket_items`
-  ADD CONSTRAINT `basket_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `basket_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `basket_items_ibfk_3` FOREIGN KEY (`variation_id`) REFERENCES `variations` (`variations_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `product_tags`
