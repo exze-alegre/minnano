@@ -8,8 +8,21 @@
 .basket-content {
   display: flex;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   margin-top: 20px;
+}
+
+.basket-items {
+  width: 100%; /* Ensure the div takes up the full width of the page */
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  gap: 20px; /* Optional: Add space between items */
+}
+
+.empty-basket-message {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
 }
 
 .cart-items {
@@ -124,37 +137,19 @@
   background-color: #ff2f1f;
 }
 
-.quantity-container {
+.basket-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 16px; // Adjusted to make the control slightly smaller
+}
 
-  .quantity-button {
-    border: none;
-    box-shadow: none;
-    font-size: 18px; // Slightly smaller button
-    padding: 0.25rem 0.5rem; // Adjust button padding to fit smaller size
-  }
+.basket-items {
+  flex-grow: 1;
+}
 
-  .quantity-input {
-    text-align: center;
-    font-size: 16px; // Slightly smaller font
-    width: 40%;
-    border: none;
-    background-color: transparent;
-    outline: none;
-
-    // Hide the up and down arrows
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    &[type="number"] {
-      -moz-appearance: textfield;
-      appearance: textfield;
-    }
-  }
+.right-sidebar {
+  width: 50%; /* Takes up 35% of the available space */
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light grey shadow */
+  margin: 20px;
+  border-radius: 8px;
 }

@@ -1,0 +1,82 @@
+/* Imports */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+.basket-item-wrapper {
+  border-radius: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  padding: 10px;
+
+  .basket-item-image {
+    padding: 0; // Ensure no padding around the image container
+    margin: 0; // Ensure no margin
+  }
+
+  .basket-item-image img {
+    display: block; // Remove any inline-block space
+    width: 100%; // Ensure the image fits the container width
+    height: auto; // Maintain the aspect ratio of the image
+  }
+
+  .basket-item-name {
+    font-family: "Lora", sans-serif;
+    font-size: 24px;
+    margin: 0;
+  }
+  .variation-text {
+    display: inline; /* Makes the element take up only as much space as its content */
+    margin: 0; /* Remove any unwanted margin */
+  }
+
+  .basket-item-price {
+    color: $cyan-300;
+    font-size: 20px;
+  }
+
+  .price {
+    color: lightgrey;
+    font-size: 16px;
+    margin-left: 5px;
+  }
+
+  .quantity-and-remove-container {
+    display: flex;
+    justify-content: space-between; /* Space out quantity and remove button */
+    align-items: center; /* Vertically align items */
+  }
+
+  .quantity-container {
+    display: flex;
+    align-items: center; /* Align quantity controls in a row */
+    width: 100px;
+  }
+
+  .quantity-button {
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+    padding: 0;
+  }
+
+  .quantity-input {
+    text-align: center;
+    margin: 0 5px;
+    font-size: 16px;
+  }
+
+  .remove-item-button {
+    background-color: lightgray !important; /* Red color */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px; /* Space between quantity container and remove button */
+  }
+}
+
+/* src/styles/Basket.scss */

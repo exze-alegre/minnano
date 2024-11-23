@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Stars from "./Stars";
 import ShippingInfo from "./ShippingInfo";
 import CustomDropdown from "./CustomDropdown";
+import Notifications from "../common/Notification"; // Import Notifications component
 import "../../styles/ProductDetails.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -11,14 +12,18 @@ const ProductDetails = ({
   addToBasket,
   selectedVariation,
   onVariationSelect,
-  basketItems, // Add this as a prop to manage the basket items locally
+  basketItems,
 }) => {
   const [quantity, setQuantity] = useState(1);
+  const [showVariationError, setShowVariationError] = useState(false); // To manage the error message visibility
+  const [notifications, setNotifications] = useState([]); // State for notifications
+  const variationDropdownRef = useRef(null); // Ref for the dropdown
   const rating = Math.round(product?.rating || 0); // Safe access to product rating
 
   useEffect(() => {
     if (selectedVariation) {
       setQuantity(1); // Reset quantity when variation is selected
+      setShowVariationError(false); // Hide the error when a variation is selected
     }
   }, [selectedVariation]);
 
@@ -34,7 +39,10 @@ const ProductDetails = ({
 
   const handleAddToBasket = () => {
     if (!selectedVariation) {
-      alert("Please select a variation before adding to the basket.");
+      setShowVariationError(true); // Show the error message
+      if (variationDropdownRef.current) {
+        variationDropdownRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the dropdown
+      }
       return;
     }
 
@@ -72,6 +80,12 @@ const ProductDetails = ({
         if (!data.success) {
           console.error("Failed to add item:", data.error);
           alert(data.error || "Failed to add item to basket.");
+        } else {
+          // Add notification for successful addition to cart
+          setNotifications((prevNotifications) => [
+            ...prevNotifications,
+            { id: Date.now(), message: "Item added to basket!" },
+          ]);
         }
       })
       .catch((error) => {
@@ -104,19 +118,28 @@ const ProductDetails = ({
             </h2>
           </div>
           <div className="stars-rating-container">
-            <span className="rating-text">{rating}</span>
+            <span className="rating-text">{product?.rating}</span>
             <Stars rating={rating} />
           </div>
 
-          <CustomDropdown
-            title={
-              selectedVariation
-                ? selectedVariation.variation_name
-                : "Select A Variation"
-            }
-            items={product?.variations || []}
-            onSelect={onVariationSelect}
-          />
+          <div ref={variationDropdownRef}>
+            <CustomDropdown
+              title={
+                selectedVariation
+                  ? selectedVariation.variation_name
+                  : "Select A Variation"
+              }
+              items={product?.variations || []}
+              onSelect={onVariationSelect}
+              className="custom-dropdown"
+            />
+          </div>
+
+          {showVariationError && (
+            <div className="error-message mt-1" style={{ color: "red" }}>
+              *Please select a variation.
+            </div>
+          )}
 
           <div className="quantity-container d-flex justify-content-between align-items-center mt-3">
             <Button
@@ -149,6 +172,9 @@ const ProductDetails = ({
           </Button>
 
           <ShippingInfo />
+
+          {/* Add the Notifications component here */}
+          <Notifications notifications={notifications} />
         </Col>
       </Row>
     </Container>
