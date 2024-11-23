@@ -1,0 +1,145 @@
+/* Imports */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+/* Global Container */
+.product-details-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Typography */
+h1 {
+  font-family: "Lora", sans-serif;
+  font-size: 30px;
+}
+
+/* Price Section */
+.price-container {
+  display: flex;
+  align-items: center;
+
+  .discount {
+    color: $cyan-300;
+    font-size: 22px;
+  }
+
+  .price {
+    color: lightgrey;
+    font-size: 18px;
+    margin-left: 5px;
+  }
+}
+
+/* Ratings Section */
+.stars-rating-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .rating-text {
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    color: $secondary;
+  }
+}
+
+/* Dropdown */
+.product-details-container .dropdown-toggle {
+  display: block;
+  width: 100%;
+}
+
+/* Remove the triangle (dropdown arrow) under the dropdown button */
+.product-details-container .dropdown-toggle::after {
+  display: none;
+}
+
+/* Quantity Selector */
+.quantity-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .quantity-button {
+    border: none;
+    box-shadow: none;
+    font-size: 20px;
+  }
+
+  .quantity-input {
+    text-align: center;
+    font-size: 20px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    outline: none;
+
+    /* Hide the up and down arrows */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+  }
+}
+
+/* Add to Cart Button */
+.add-to-basket-button {
+  width: 100%;
+  background-color: $red-500;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  padding: 10px 0;
+  border-radius: 50px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $red-700;
+  }
+}
+
+/* Dropdown */
+.product-details-container .dropdown {
+  width: 100%;
+}
+
+.product-details-container .dropdown-toggle {
+  display: block;
+  width: 100%;
+  text-align: left; // Align text to match Bootstrap's dropdown default style
+}
+
+.product-details-container .dropdown-menu {
+  width: 100%; // Ensures the dropdown menu matches the button's width
+  border-radius: 0; // Optional: Removes rounded corners for a flush look
+}
+
+.product-details-container .dropdown-item {
+  width: 100%; // Ensures the dropdown items take up full width
+  text-align: left; // Optional: Aligns text to the left
+  padding: 10px; // Adjust padding for better spacing
+}
+
+.add-to-cart-button {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Tactile effect when button is pressed */
+.add-to-cart-button:active {
+  transform: scale(0.95); /* Button shrinks to 95% of its original size */
+  background-color: $red-700;
+}

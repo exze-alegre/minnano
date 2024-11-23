@@ -1,0 +1,19 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Star styles
+.star-icons {
+  display: flex;
+  gap: 5px;
+  margin-top: 0;
+  background-color: transparent;
+
+  .filled-star {
+    color: $yellow-400; // Bootstrap variable for yellow
+  }
+
+  .empty-star {
+    color: lightgray;
+  }
+}

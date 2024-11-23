@@ -1,0 +1,36 @@
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling globally */
+}
+
+.product-page-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allows columns to wrap on smaller screens */
+}
+
+.image-column {
+  flex: 1;
+  max-width: 60%; /* Ensures equal width for both columns */
+  padding: 15px;
+  box-sizing: border-box; /* Prevents padding from affecting the column width */
+}
+
+.detail-column {
+  flex: 1;
+  max-width: 38%; /* Ensures equal width for both columns */
+  padding: 15px 0;
+  box-sizing: border-box; /* Prevents padding from affecting the column width */
+}
+
+@media (max-width: 992px) {
+  .image-column,
+  .detail-column {
+    max-width: 100%; /* On medium screens, take full width */
+  }
+}
+
+@media (max-width: 576px) {
+  .product-column {
+    padding: 10px; /* Reduce padding on small screens */
+  }
+}
