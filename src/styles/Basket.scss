@@ -8,7 +8,7 @@
 .basket-content {
   display: flex;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   margin-top: 20px;
 }
 
@@ -16,7 +16,7 @@
   width: 100%; /* Ensure the div takes up the full width of the page */
   display: flex;
   flex-direction: column; /* Arrange items vertically */
-  gap: 20px; /* Optional: Add space between items */
+  gap: 0; /* Remove space between items */
 }
 
 .empty-basket-message {
@@ -48,7 +48,7 @@
 .cart-items-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0; /* Remove space between items */
 }
 
 .cart-item {
