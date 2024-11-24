@@ -1,16 +1,73 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
+import BackButton from "../common/BackButton";
 import BasketItem from "../common/BasketItem"; // Import the new BasketItem component
 import Notifications from "../common/Notification"; // Assuming you have a Notifications component
+import { Container, Row, Col } from "react-bootstrap";
 import "../../styles/Basket.scss";
 
 const Basket = () => {
   const [basketItems, setBasketItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [notifications, setNotifications] = useState([]); // New state for notifications
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBasketItems();
   }, []);
+
+  const handleCheckboxChange = (itemId, isChecked) => {
+    setSelectedItems((prevSelected) =>
+      isChecked
+        ? [...prevSelected, itemId]
+        : prevSelected.filter((id) => id !== itemId)
+    );
+  };
+
+  const handleCheckout = () => {
+    console.log("Basket Items before filtering:", basketItems); // Log the raw basketItems array
+
+    const itemsForCheckout = basketItems
+      .filter((item) => selectedItems.includes(item.basket_item_id))
+      .map((item) => {
+        // Log each item to check its properties
+        console.log(item);
+
+        return {
+          added_at: item.added_at,
+          basket_item_id: item.basket_item_id,
+          price: item.price,
+          product_id: item.product_id,
+          product_name: item.product_name,
+          quantity: item.quantity,
+          selected_variation: item.selected_variation,
+          discount_price: item.discount_price,
+          image: item.image,
+          variation_id: item.variation_id,
+          variation_name: item.variation_name,
+          user_id: item.user_id,
+        };
+      });
+
+    console.log("Items for checkout:", itemsForCheckout);
+
+    // Store the checkout items in localStorage
+    localStorage.setItem("checkoutItems", JSON.stringify(itemsForCheckout));
+
+    // Log the data from localStorage to verify it
+    const storedCheckoutItems = JSON.parse(
+      localStorage.getItem("checkoutItems")
+    );
+    console.log(
+      "Stored Checkout Items from LocalStorage:",
+      storedCheckoutItems
+    );
+    navigate("/checkout");
+
+    // Optionally, you can also clear the selected items array after checkout is completed
+    setSelectedItems([]); // Clear selected items for a fresh start
+  };
 
   const fetchBasketItems = () => {
     fetch("http://localhost/minnano/backend/getBasketItems.php?user_id=1")
@@ -184,29 +241,36 @@ const Basket = () => {
   return (
     <div className="basket-page">
       <Header />
-      <div className="basket-content">
-        <div className="basket-items">
-          {basketItems.length === 0 ? (
-            <p className="empty-basket-message">Your basket is empty</p>
-          ) : (
-            basketItems.map((item) => (
+      <Container className="basket-page-container">
+        <BackButton />
+        <Row className="basket-row px-5">
+          <Col className="basket-items">
+            {basketItems.map((item) => (
               <BasketItem
                 key={item.basket_item_id}
                 item={item}
+                onCheckboxChange={handleCheckboxChange}
                 handleVariationChange={handleVariationChange}
                 increaseQuantity={increaseQuantity}
                 decreaseQuantity={decreaseQuantity}
                 handleQuantityChange={handleQuantityChange}
                 removeItem={removeItem}
               />
-            ))
-          )}
-        </div>
-        <div className="right-sidebar">
-          {/* Content for the sidebar can go here, like a summary of the cart */}
-        </div>
-      </div>
-      {/* Display notifications */}
+            ))}
+          </Col>
+          <Col className="checkout-summary">
+            <h3>Cart Summary</h3>
+            <p>Total Price: ₱{totalPrice.toFixed(2)}</p>
+            <button
+              className="checkout-button"
+              onClick={handleCheckout}
+              disabled={selectedItems.length === 0}
+            >
+              Proceed to Checkout
+            </button>
+          </Col>
+        </Row>
+      </Container>
       <Notifications notifications={notifications} />
     </div>
   );

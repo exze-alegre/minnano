@@ -80,3 +80,18 @@
 }
 
 /* src/styles/Basket.scss */
+.basket-item-checkbox .basket-checkbox {
+  width: 25px; /* Slightly bigger box */
+  height: 25px; /* Square shape */
+  accent-color: $red-400; /* Set the checkbox color to $red-400 */
+  border: 2px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  display: inline-block;
+
+  /* Change the background when checked */
+  &:checked {
+    background-color: $red-400; /* Red background when checked */
+    border-color: $red-400; /* Match border with background */
+  }
+}
