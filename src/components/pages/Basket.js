@@ -26,47 +26,36 @@ const Basket = () => {
   };
 
   const handleCheckout = () => {
-    console.log("Basket Items before filtering:", basketItems); // Log the raw basketItems array
+    if (selectedItems.length === 0) {
+      // Trigger notification
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { id: Date.now(), message: "Please select item for checkout" },
+      ]);
+      return; // Stop further execution
+    }
 
     const itemsForCheckout = basketItems
       .filter((item) => selectedItems.includes(item.basket_item_id))
-      .map((item) => {
-        // Log each item to check its properties
-        console.log(item);
+      .map((item) => ({
+        added_at: item.added_at,
+        basket_item_id: item.basket_item_id,
+        price: item.price,
+        product_id: item.product_id,
+        product_name: item.product_name,
+        quantity: item.quantity,
+        selected_variation: item.selected_variation,
+        discount_price: item.discount_price,
+        image: item.image,
+        variation_id: item.variation_id,
+        variation_name: item.variation_name,
+        user_id: item.user_id,
+      }));
 
-        return {
-          added_at: item.added_at,
-          basket_item_id: item.basket_item_id,
-          price: item.price,
-          product_id: item.product_id,
-          product_name: item.product_name,
-          quantity: item.quantity,
-          selected_variation: item.selected_variation,
-          discount_price: item.discount_price,
-          image: item.image,
-          variation_id: item.variation_id,
-          variation_name: item.variation_name,
-          user_id: item.user_id,
-        };
-      });
-
-    console.log("Items for checkout:", itemsForCheckout);
-
-    // Store the checkout items in localStorage
+    // Save selected items to localStorage and navigate
     localStorage.setItem("checkoutItems", JSON.stringify(itemsForCheckout));
-
-    // Log the data from localStorage to verify it
-    const storedCheckoutItems = JSON.parse(
-      localStorage.getItem("checkoutItems")
-    );
-    console.log(
-      "Stored Checkout Items from LocalStorage:",
-      storedCheckoutItems
-    );
     navigate("/checkout");
-
-    // Optionally, you can also clear the selected items array after checkout is completed
-    setSelectedItems([]); // Clear selected items for a fresh start
+    setSelectedItems([]); // Clear selected items
   };
 
   const fetchBasketItems = () => {
@@ -234,9 +223,18 @@ const Basket = () => {
     updateQuantityInDatabase(itemId, updatedQuantity);
   };
 
+  // Calculate total price based on the full price of items
   const totalPrice = basketItems.reduce((total, item) => {
+    return total + parseFloat(item.price) * item.quantity;
+  }, 0);
+
+  // Calculate total discount price based on the discounted price of items
+  const totalDiscountPrice = basketItems.reduce((total, item) => {
     return total + parseFloat(item.discount_price) * item.quantity;
   }, 0);
+
+  // Calculate price after discount
+  const priceAfterDiscount = totalPrice - totalDiscountPrice;
 
   return (
     <div className="basket-page">
@@ -259,19 +257,22 @@ const Basket = () => {
             ))}
           </Col>
           <Col className="checkout-summary">
-            <h3>Cart Summary</h3>
-            <p>Total Price: ₱{totalPrice.toFixed(2)}</p>
-            <button
-              className="checkout-button"
-              onClick={handleCheckout}
-              disabled={selectedItems.length === 0}
-            >
+            {basketItems.length > 0 ? (
+              <>
+                <h3>Cart Summary</h3>
+                <p>Total Price: ₱{totalDiscountPrice.toFixed(2)}</p>
+                <p>Saved: ₱{priceAfterDiscount.toFixed(2)}</p>
+              </>
+            ) : (
+              <p>Your cart is empty!</p>
+            )}
+            <button className="checkout-button" onClick={handleCheckout}>
               Proceed to Checkout
             </button>
           </Col>
         </Row>
+        <Notifications notifications={notifications} />
       </Container>
-      <Notifications notifications={notifications} />
     </div>
   );
 };

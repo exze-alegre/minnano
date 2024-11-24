@@ -16,6 +16,10 @@
     margin: 0; // Ensure no margin
   }
 
+  .basket-item-details .dropdown-toggle::after {
+    display: none;
+  }
+
   .basket-item-image img {
     display: block; // Remove any inline-block space
     width: 100%; // Ensure the image fits the container width
@@ -94,4 +98,18 @@
     background-color: $red-400; /* Red background when checked */
     border-color: $red-400; /* Match border with background */
   }
+}
+
+.empty-basket-message {
+  position: fixed; /* Fixes the message to the center of the page */
+  top: 50%; /* Vertically centers the message */
+  left: 50%; /* Horizontally centers the message */
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Offsets the element to account for its own size */
+  font-size: 2rem; /* Adjust font size */
+  font-weight: bold;
+  color: #555;
+  text-align: center;
 }

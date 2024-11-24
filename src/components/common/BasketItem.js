@@ -1,5 +1,5 @@
 import React from "react";
-import CustomDropdown from "../common/CustomDropdown";
+import CustomDropdown from "./CustomDropdown";
 import { Button, Row, Col } from "react-bootstrap";
 import "../../styles/BasketItem.scss";
 
@@ -47,7 +47,7 @@ const BasketItem = ({
           </Col>
           <Col md={7} className="basket-item-details d-flex flex-column">
             <p className="basket-item-name">{item.product_name}</p>
-            <p className="mt-1 variation-text">Variation:</p>
+            <p className="variation-text">Variation:</p>
             <CustomDropdown
               title={
                 item.selected_variation?.variation_name || "Select Variation"

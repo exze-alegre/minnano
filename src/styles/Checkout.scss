@@ -1,0 +1,87 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+.checkout-items-container {
+  border: 1px solid #ddd; // Apply border to the parent container
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.checkout-item-container {
+  padding: 10px;
+  margin-bottom: 10px; // Use margin for spacing between items
+  // Remove any borders from individual items here
+}
+
+.checkout-item-container img {
+  max-width: 100%; // Ensure the image is responsive and fits within the column
+  height: auto;
+}
+
+.product-name {
+  font-family: "Lora", sans-serif;
+  font-size: 20px;
+}
+
+s.discount {
+  font-size: 20px;
+  color: $cyan-300;
+}
+
+.payment-summary {
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.payment-summary h4 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.order-summary {
+  margin-top: 20px;
+}
+
+.place-order-btn {
+  margin-top: 10px;
+  width: 100%;
+  background-color: $red-500;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  padding: 10px 0;
+  border-radius: 50px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $red-700;
+  }
+
+  &:active {
+    background-color: $red-500; /* Keep the same background color on click */
+    box-shadow: none; /* Optionally remove any box-shadow applied during active state */
+  }
+}
+
+.payment-summary /* Checkout.scss */
+.select-voucher-btn {
+  text-align: left; /* Aligns the button text to the left */
+  display: block; /* Ensures the button takes full width */
+  width: 100%; /* Optionally make the button span the full width */
+}
+
+.payment-summary .dropdown-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  text-align: left; /* Aligns the title to the start (left) */
+}
+
+/* Remove the triangle (dropdown arrow) under the dropdown button */
+.payment-summary .dropdown-toggle::after {
+  display: none;
+}

@@ -165,6 +165,7 @@ const ProductDetails = ({
           </div>
 
           <Button
+            variant="danger"
             onClick={handleAddToBasket}
             className="add-to-basket-button mt-3"
           >

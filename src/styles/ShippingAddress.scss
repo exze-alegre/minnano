@@ -1,0 +1,61 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.shipping-address {
+  margin-bottom: 1rem; // Optional: adds some space between address cards
+
+  .address-card {
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Light grey shadow
+    border-radius: 8px;
+    display: inline-block; // Makes the div height adjust based on its content
+    width: 100%; // Ensures the card spans the full width of its parent
+  }
+
+  .location-icon {
+    color: $red-500; // Optional: color of the location icon
+    margin-right: 8px;
+  }
+
+  .change-button {
+    background-color: lightgray; // Custom red color (can adjust to your `$red-500`)
+    border: none;
+    &:hover {
+      background-color: gray; // Darker red for hover effect
+    }
+  }
+
+  p {
+    margin-bottom: 0; // Remove default margin to prevent extra height
+  }
+}
+
+.edit-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  color: #007bff;
+  text-decoration: none;
+  padding-right: 10px;
+}
+
+/* ShippingAddress.scss */
+.add-address-container {
+  margin-top: 20px; /* Space between the addresses and the button */
+}
+
+.add-address-button {
+  border: 1px solid #6c757d; /* Grey border */
+  background-color: transparent;
+  color: #6c757d; /* Grey text */
+  padding: 10px;
+  text-align: center;
+
+  &:hover {
+    background-color: #f8f9fa; /* Light background on hover */
+    border-color: #5a6268; /* Darker border on hover */
+  }
+}
