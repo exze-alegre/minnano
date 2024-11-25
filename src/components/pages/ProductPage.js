@@ -29,7 +29,7 @@ const ProductPage = () => {
 
   return (
     <div>
-      <Header />
+ 
       <Container className="product-page-container">
         <BackButton />
         <Row className="product-page-row">

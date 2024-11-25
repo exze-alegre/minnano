@@ -4,6 +4,7 @@ import SearchResults from "./components/pages/SearchResult";
 import Basket from "./components/pages/Basket";
 import Home from "./components/pages/Home";
 import ProductPage from "./components/pages/ProductPage";
+import Login from "./components/pages/Login"; // Import the Login component
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -11,7 +12,7 @@ function App() {
   // Initialize cart from localStorage when the app loads
   useEffect(() => {
     const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(currentCart);  // Initialize cart from localStorage
+    setCart(currentCart); // Initialize cart from localStorage
   }, []);
 
   // Function to add an item to the cart
@@ -28,7 +29,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} /> {/* Default to Login */}
+          <Route path="/home" element={<Home />} /> {/* Home route */}
           <Route path="/basket" element={<Basket cartItems={cart} />} />
           <Route path="/search" element={<SearchResults />} />
           <Route
