@@ -85,3 +85,22 @@ s.discount {
 .payment-summary .dropdown-toggle::after {
   display: none;
 }
+
+.message-for-seller {
+  textarea {
+    border: 1px solid #ced4da; // Default Bootstrap-style border
+    border-radius: 4px;
+    padding: 0.5rem;
+
+    &:focus {
+      border-color: lightgray;
+      box-shadow: 0 0 0 0.2rem rgba(lightgray, 0.25);
+      outline: none;
+    }
+  }
+
+  h5 {
+    color: $red-400; // Optional: Add a red title for better styling consistency
+    margin-bottom: 0.5rem;
+  }
+}

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../common/Header";
 import BackButton from "../common/BackButton";
+import FakeLoader from "../common/FakeLoader";
 import BasketItem from "../common/BasketItem"; // Import the new BasketItem component
 import Notifications from "../common/Notification"; // Assuming you have a Notifications component
 import { Container, Row, Col } from "react-bootstrap";
@@ -11,7 +11,7 @@ const Basket = () => {
   const [basketItems, setBasketItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [notifications, setNotifications] = useState([]); // New state for notifications
-  const navigate = useNavigate();
+  const loaderRef = useRef();
 
   useEffect(() => {
     fetchBasketItems();
@@ -35,6 +35,8 @@ const Basket = () => {
       return; // Stop further execution
     }
 
+    loaderRef.current.startLoading(); // Trigger the loader
+
     const itemsForCheckout = basketItems
       .filter((item) => selectedItems.includes(item.basket_item_id))
       .map((item) => ({
@@ -54,7 +56,6 @@ const Basket = () => {
 
     // Save selected items to localStorage and navigate
     localStorage.setItem("checkoutItems", JSON.stringify(itemsForCheckout));
-    navigate("/checkout");
     setSelectedItems([]); // Clear selected items
   };
 
@@ -269,6 +270,7 @@ const Basket = () => {
             <button className="checkout-button" onClick={handleCheckout}>
               Proceed to Checkout
             </button>
+            <FakeLoader ref={loaderRef} nextPage="/checkout" />
           </Col>
         </Row>
         <Notifications notifications={notifications} />

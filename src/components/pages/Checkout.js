@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "../common/Header";
 import ShippingAddress from "../common/ShippingAdress";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import FakeLoader from "../common/FakeLoader";
 import CustomDropdown from "../common/CustomDropdown"; // You can still keep the CustomDropdown for the payment method
 import VoucherModal from "../common/VoucherModal"; // Import the new VoucherModal
 import "../../styles/Checkout.scss";
@@ -12,6 +13,7 @@ const Checkout = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [showVoucherModal, setShowVoucherModal] = useState(false);
+  const loaderRef = useRef();
 
   useEffect(() => {
     const storedCheckoutItems = JSON.parse(
@@ -20,6 +22,7 @@ const Checkout = () => {
     if (storedCheckoutItems) {
       setCheckoutItems(storedCheckoutItems);
     }
+    console.log(JSON.stringify(storedCheckoutItems));
 
     fetch("http://localhost/minnano/backend/getVouchers.php")
       .then((response) => response.json())
@@ -70,6 +73,51 @@ const Checkout = () => {
   totalPayment += shippingFee;
 
   totalPayment = totalPayment < 0 ? 0 : totalPayment.toFixed(2);
+
+  const placeOrder = async () => {
+    loaderRef.current.startLoading(); // Trigger the loader
+
+    const orderData = [
+      {
+        user_id: 1,
+        basket_item_id: 104,
+        price: "700.00",
+        product_id: 2,
+        product_name: "Unicorn Dream",
+        quantity: 1,
+        selected_variation: {
+          variation_id: 3,
+          variation_name: "Pink Unicorn Dream",
+          discount_price: "660.00",
+          image: "https://via.placeholder.com/255?text=Pink+Unicorn+Dream",
+        },
+        discount_price: "660.00",
+        variation_id: 3,
+      },
+    ];
+
+    try {
+      const response = await fetch(
+        "http://localhost/minnano/backend/addToOrders.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Ensure content type is set to JSON
+          },
+          body: JSON.stringify(orderData), // Send the JSON data
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  };
 
   return (
     <div className="checkout-page">
@@ -130,6 +178,16 @@ const Checkout = () => {
                 <p>No items in the cart</p>
               )}
             </div>
+            <Row className="mt-3 message-for-seller">
+              <Col>
+                <h5>Message for Seller</h5>
+                <textarea
+                  className="form-control"
+                  rows="3"
+                  placeholder="Leave a message for the seller (optional)"
+                />
+              </Col>
+            </Row>
           </Col>
           <Col md={4}>
             <div className="payment-summary">
@@ -177,9 +235,14 @@ const Checkout = () => {
                 <h5>Total Payment: ₱{totalPayment}</h5>
               </div>
 
-              <Button variant="danger" className="place-order-btn">
+              <Button
+                variant="danger"
+                className="place-order-btn"
+                onClick={placeOrder}
+              >
                 Place Order
               </Button>
+              <FakeLoader ref={loaderRef} nextPage="/order-successful" />
             </div>
           </Col>
         </Row>

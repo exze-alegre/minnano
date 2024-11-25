@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import CustomDropdown from "./CustomDropdown";
 import { Button, Row, Col } from "react-bootstrap";
 import "../../styles/BasketItem.scss";
@@ -12,6 +13,8 @@ const BasketItem = ({
   removeItem,
   onCheckboxChange,
 }) => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
   const handleCheckboxChange = (e) => {
     // Log the checkbox state and the item id
     console.log(
