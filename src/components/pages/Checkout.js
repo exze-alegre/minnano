@@ -77,24 +77,25 @@ const Checkout = () => {
   const placeOrder = async () => {
     loaderRef.current.startLoading(); // Trigger the loader
 
-    const orderData = [
-      {
-        user_id: 1,
-        basket_item_id: 104,
-        price: "700.00",
-        product_id: 2,
-        product_name: "Unicorn Dream",
-        quantity: 1,
-        selected_variation: {
-          variation_id: 3,
-          variation_name: "Pink Unicorn Dream",
-          discount_price: "660.00",
-          image: "https://via.placeholder.com/255?text=Pink+Unicorn+Dream",
-        },
-        discount_price: "660.00",
-        variation_id: 3,
-      },
-    ];
+    // Construct the orderData dynamically from the checkoutItems and additional fields
+    const orderData = checkoutItems.map((item) => ({
+      user_id: 1, // Replace with the actual user ID
+      basket_item_id: item.basket_item_id,
+      price: item.price, // Original price
+      product_id: item.product_id,
+      product_name: item.product_name,
+      quantity: item.quantity,
+      discount_price: item.discount_price, // Discounted price
+      image: item.selected_variation.image,
+      variation_name: item.selected_variation.variation_name,
+      variation_id: item.variation_id,
+      shipping: shippingFee, // Shipping fee
+      total_payment: totalPayment, // Total payment after discount and shipping
+      payment_method: selectedPaymentMethod
+        ? selectedPaymentMethod.variation_name
+        : "N/A", // Payment method
+      saved: (merchandiseSubtotal - totalPayment + shippingFee).toFixed(2), // Saved amount
+    }));
 
     try {
       const response = await fetch(
@@ -104,7 +105,7 @@ const Checkout = () => {
           headers: {
             "Content-Type": "application/json", // Ensure content type is set to JSON
           },
-          body: JSON.stringify(orderData), // Send the JSON data
+          body: JSON.stringify(orderData), // Send the dynamically created JSON data
         }
       );
 
