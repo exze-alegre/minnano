@@ -28,7 +28,9 @@ function getProductDetails($conn, $searchQuery, $includeTags, $includeUserData, 
     $whereClauseStr = implode(' OR ', $whereClause);
 
     // Get products based on search query
+
     $sql = "SELECT DISTINCT p.id, p.name, p.description, p.discountPrice, p.price, p.image1, p.image2, p.image3, p.rating 
+
             FROM products p
             LEFT JOIN product_tags pt ON pt.product_id = p.id
             LEFT JOIN tags t ON t.id = pt.tag_id

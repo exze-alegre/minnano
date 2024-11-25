@@ -47,7 +47,6 @@ const Header = () => {
 
     checkLogin();
   }, []);
-
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchQuery) {

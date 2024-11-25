@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sawarabi+Gothic&display=swap");
+
+h2{
+  font-family: "Sawarabi Gothic", sans-serif;
+}
+
+.body-row {
+  background-color: #BC002D; /* Crimson background color */
+  color: #fff; /* Optional: Set text color to white for contrast */
+}
+
+a{
+  text-decoration: none;
+  color: black ;
+}
+
+#LoginCard{
+  background-color: #D96565;
+}
+/* Login Form Styling */
+.login-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.login-form {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+button.submit-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #d96565;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button.submit-btn:hover:not(:disabled) {
+  background-color: #d74a49;
+}
+
+.toggle-text {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+button.toggle-button {
+  background: none;
+  border: none;
+  color: #d96565;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button.toggle-button:hover {
+  text-decoration: underline;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fb-button {
+  background-color: #3b5998;
+  color: white;
+}
+
+.fb-button:hover {
+  background-color: #2d4373;
+}
+
+.google-button {
+  background-color: #db4437;
+  color: white;
+}
+
+.google-button:hover {
+  background-color: #c1351d;
+}
+
+.social-button i {
+  margin-right: 8px;
+}
+
+.error {
+  color: white; /* White text */
+  background-color: rgba(255, 0, 0, 0.7); /* Red background for visibility */
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 15px;
+  font-weight: bold;
+}
