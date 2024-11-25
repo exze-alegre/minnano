@@ -28,9 +28,7 @@ function getProductDetails($conn, $searchQuery, $includeTags, $includeUserData, 
     $whereClauseStr = implode(' OR ', $whereClause);
 
     // Get products based on search query
-
-    $sql = "SELECT DISTINCT p.id, p.name, p.description, p.discountPrice, p.price, p.image1, p.image2, p.image3, p.rating 
-
+    $sql = "SELECT DISTINCT p.id, p.name, p.description, p.discountPrice, p.price, p.image1, p.image2, p.image3, p.rating, p.sold
             FROM products p
             LEFT JOIN product_tags pt ON pt.product_id = p.id
             LEFT JOIN tags t ON t.id = pt.tag_id
@@ -62,6 +60,7 @@ function getProductDetails($conn, $searchQuery, $includeTags, $includeUserData, 
             "price" => $product['price'],
             "discountPrice" => $product['discountPrice'],
             "rating" => $product['rating'],
+            "sold" => $product['sold'],  // Added the 'sold' column here
             "image1" => $product['image1'],
             "image2" => $product['image2'],
             "image3" => $product['image3'], // image4 and image5 removed
