@@ -1,15 +1,9 @@
--- Create the database if it does not exist
-CREATE DATABASE IF NOT EXISTS minnano;
-
--- Use the database
-USE minnano;
-
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2024 at 07:33 PM
+-- Generation Time: Nov 25, 2024 at 06:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,7 +42,60 @@ CREATE TABLE `basket_items` (
 --
 
 INSERT INTO `basket_items` (`basket_item_id`, `user_id`, `product_id`, `variation_id`, `discount_price`, `quantity`, `added_at`) VALUES
-(94, 1, 4, 8, 374.00, 1, '2024-11-23 11:30:05');
+(104, 1, 2, 3, 660.00, 1, '2024-11-24 03:47:45'),
+(105, 1, 8, 15, 1097.00, 3, '2024-11-24 06:32:10'),
+(106, 1, 1, 1, 451.00, 1, '2024-11-24 07:51:21'),
+(107, 1, 3, 5, 95.00, 1, '2024-11-24 21:09:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `checkout_unused`
+--
+
+CREATE TABLE `checkout_unused` (
+  `checkout_id` int(11) NOT NULL,
+  `basket_item_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `discount_price` decimal(10,2) NOT NULL,
+  `variation_id` int(11) NOT NULL,
+  `variation_name` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `added_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `basket_item_id` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `selected_variation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`selected_variation`)),
+  `discount_price` decimal(10,2) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `variation_id` int(11) DEFAULT NULL,
+  `variation_name` varchar(255) DEFAULT NULL,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `basket_item_id`, `price`, `product_id`, `product_name`, `quantity`, `selected_variation`, `discount_price`, `image`, `variation_id`, `variation_name`, `added_at`) VALUES
+(12, 1, 104, 700.00, 2, 'Unicorn Dream', 1, '{\"variation_id\":3,\"variation_name\":\"Pink Unicorn Dream\",\"discount_price\":\"660.00\",\"image\":\"https://via.placeholder.com/255?text=Pink+Unicorn+Dream\"}', 660.00, NULL, 3, NULL, '2024-11-24 21:56:56');
 
 -- --------------------------------------------------------
 
@@ -113,6 +160,29 @@ INSERT INTO `product_tags` (`product_id`, `tag_id`) VALUES
 (7, 7),
 (8, 1),
 (8, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shipping_addresses`
+--
+
+CREATE TABLE `shipping_addresses` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `contact_number` varchar(15) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shipping_addresses`
+--
+
+INSERT INTO `shipping_addresses` (`id`, `user_id`, `full_name`, `address`, `contact_number`, `created_at`) VALUES
+(1, 1, 'Akina Rexzel Ann Alegre', 'Holy Name University, Janssen Heights, 6300 J.A. C...', '09123456789', '2024-11-24 08:40:41'),
+(2, 1, 'Kyle Joshua Yamson', 'Holy Name University, Janssen Heights, 6300 J.A. C...', '09694208008', '2024-11-24 16:26:10');
 
 -- --------------------------------------------------------
 
@@ -195,6 +265,31 @@ INSERT INTO `variations` (`variations_id`, `product_id`, `variation_name`, `disc
 (15, 8, 'Gray Elephant Hugs', 1097.00, 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs'),
 (16, 8, 'Pink Elephant Hugs', 1101.00, 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vouchers`
+--
+
+CREATE TABLE `vouchers` (
+  `id` int(11) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `discount_type` enum('percentage','fixed') NOT NULL,
+  `discount_value` decimal(10,2) NOT NULL,
+  `min_spend` decimal(10,2) DEFAULT 0.00,
+  `active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `vouchers`
+--
+
+INSERT INTO `vouchers` (`id`, `code`, `discount_type`, `discount_value`, `min_spend`, `active`) VALUES
+(8, 'DISCOUNT5', 'percentage', 5.00, 0.00, 1),
+(9, 'FLAT50', 'fixed', 50.00, 500.00, 1),
+(10, 'DISCOUNT15', 'percentage', 15.00, 1000.00, 1),
+(11, 'DISCOUNT25', 'percentage', 25.00, 1500.00, 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -204,6 +299,18 @@ INSERT INTO `variations` (`variations_id`, `product_id`, `variation_name`, `disc
 --
 ALTER TABLE `basket_items`
   ADD PRIMARY KEY (`basket_item_id`);
+
+--
+-- Indexes for table `checkout_unused`
+--
+ALTER TABLE `checkout_unused`
+  ADD PRIMARY KEY (`checkout_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`);
 
 --
 -- Indexes for table `products`
@@ -217,6 +324,12 @@ ALTER TABLE `products`
 ALTER TABLE `product_tags`
   ADD KEY `product_id` (`product_id`),
   ADD KEY `tag_id` (`tag_id`);
+
+--
+-- Indexes for table `shipping_addresses`
+--
+ALTER TABLE `shipping_addresses`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tags`
@@ -240,6 +353,13 @@ ALTER TABLE `variations`
   ADD KEY `product_id` (`product_id`);
 
 --
+-- Indexes for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -247,13 +367,31 @@ ALTER TABLE `variations`
 -- AUTO_INCREMENT for table `basket_items`
 --
 ALTER TABLE `basket_items`
-  MODIFY `basket_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `basket_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+
+--
+-- AUTO_INCREMENT for table `checkout_unused`
+--
+ALTER TABLE `checkout_unused`
+  MODIFY `checkout_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `shipping_addresses`
+--
+ALTER TABLE `shipping_addresses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -272,6 +410,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `variations`
   MODIFY `variations_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
