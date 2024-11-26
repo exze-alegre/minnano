@@ -1,5 +1,4 @@
 <?php
-// Allow cross-origin requests from localhost:3000
 header('Access-Control-Allow-Origin: http://localhost:3000'); // Add your React app's URL here
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST');
@@ -28,9 +27,6 @@ if ($conn->connect_error) {
 // Get raw POST data
 $data = file_get_contents("php://input");
 
-// Log the raw data to a file for debugging
-file_put_contents("php_debug.log", $data, FILE_APPEND);
-
 // Decode the JSON data
 $decodedData = json_decode($data, true);
 
@@ -48,13 +44,28 @@ foreach ($decodedData as $item) {
     $product_id = $item['product_id'];
     $product_name = $item['product_name'];
     $quantity = $item['quantity'];
-    $selected_variation = json_encode($item['selected_variation']);
     $discount_price = $item['discount_price'];
     $variation_id = $item['variation_id'];
+    $variation_name = $item['variation_name'];
+    $image = $item['image'];
+    $shipping = $item['shipping']; // Shipping fee
+    $total_payment = $item['total_payment']; // Total payment after discount and shipping
+    $payment_method = $item['payment_method']; // Payment method
+    $saved = $item['saved']; // Saved amount
     $added_at = date('Y-m-d H:i:s');
 
-    $sql = "INSERT INTO orders (user_id, basket_item_id, price, product_id, product_name, quantity, selected_variation, discount_price, variation_id, added_at)
-            VALUES ('$user_id', '$basket_item_id', '$price', '$product_id', '$product_name', '$quantity', '$selected_variation', '$discount_price', '$variation_id', '$added_at')";
+    // Insert query
+    $sql = "INSERT INTO orders (
+                user_id, basket_item_id, price, product_id, product_name,
+                quantity, discount_price, variation_id,
+                variation_name, image, shipping, total_payment,
+                payment_method, saved, added_at
+            ) VALUES (
+                '$user_id', '$basket_item_id', '$price', '$product_id', '$product_name',
+                '$quantity', '$discount_price', '$variation_id',
+                '$variation_name', '$image', '$shipping', '$total_payment',
+                '$payment_method', '$saved', '$added_at'
+            )";
 
     if ($conn->query($sql) === TRUE) {
         echo json_encode(["message" => "Order added successfully"]);

@@ -6,8 +6,7 @@ import Home from "./components/pages/Home";
 import ProductPage from "./components/pages/ProductPage";
 import Checkout from "./components/pages/Checkout";
 import OrderSuccess from "./components/pages/OrderSuccess";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import Login from "./components/pages/Login"; // Import the Login component
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -33,6 +32,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} /> {/* Default to Login */}
           <Route path="/basket" element={<Basket cartItems={cart} />} />
           <Route path="/search" element={<SearchResults />} />
           <Route

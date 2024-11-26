@@ -12,7 +12,7 @@ const ProductCarousel = () => {
   ];
 
   return (
-    <Carousel interval={1500} className="m-5" controls={false}>
+    <Carousel interval={800} className="m-5" controls={false}>
       {images.map((image, index) => (
         <Carousel.Item key={index}>
           <img

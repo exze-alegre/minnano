@@ -38,7 +38,7 @@ const Header = () => {
           setLoggedIn(true);
           setUserProfile(response.data.user);
         } else {
-          setLoggedIn(false);
+          setLoggedIn(true);
         }
       } catch (error) {
         console.error("Error checking login status:", error);
@@ -47,7 +47,6 @@ const Header = () => {
 
     checkLogin();
   }, []);
-
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchQuery) {

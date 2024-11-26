@@ -34,10 +34,10 @@ const Home = () => {
     <div className="container-fluid p-5" style={{ backgroundColor: '#FFF9F9' }}>
   <Header />
   <ProductCarousel />
-  <h1>Our Products</h1>
+  <h1>Featured Products</h1>
   <Row className="product-list-container">
         {products.slice(0, 5).map((product, index) => (
-          <Col key={index} md={5} className="mb-2" > 
+          <Col key={index} md={3} className="mb-2" > 
             <ProductCard product={product} size="small" />
           </Col>
         ))}

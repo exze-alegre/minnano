@@ -120,6 +120,7 @@ const ProductDetails = ({
           <div className="stars-rating-container">
             <span className="rating-text">{product?.rating}</span>
             <Stars rating={rating} />
+            <span className="sold-text">{product?.sold} sold</span>
           </div>
 
           <div ref={variationDropdownRef}>
