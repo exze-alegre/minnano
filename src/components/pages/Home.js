@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import ProductCard from "../common/ProductCard";
 import Header from "../common/Header";
 import "../../styles/Home.scss"; // Assuming you have custom styles for the homepage
+import ProductCarousel from "../common/ProductCarousel";
+import { Row } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -28,15 +31,19 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="container-fluid p-0 m-0">
-      <Header />
-      <h1>Product List</h1>
-      <div className="product-list-container">
-        {products.map((product) => (
-          <ProductCard product={product} size="small" />
+    <div className="container-fluid p-5" style={{ backgroundColor: '#FFF9F9' }}>
+  <Header />
+  <ProductCarousel />
+  <h1>Our Products</h1>
+  <Row className="product-list-container">
+        {products.slice(0, 5).map((product, index) => (
+          <Col key={index} md={5} className="mb-2" > 
+            <ProductCard product={product} size="small" />
+          </Col>
         ))}
-      </div>
-    </div>
+      </Row>
+</div>
+
   );
 };
 

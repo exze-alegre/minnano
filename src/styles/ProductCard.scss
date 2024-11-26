@@ -9,15 +9,19 @@
   box-shadow: none !important;
   background-color: transparent;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
 
   // Shared styles for titles, text, and prices
   .card-title {
     margin: 0;
     font-family: "Lora", sans-serif;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal; /* Allow wrapping */
+    overflow: visible;   /* Ensure full content shows */
+    text-overflow: unset; /* Disable truncation */
+    display: inline;     /* Prevent block or vertical stacking */
+    line-height: 1.2;    /* Adjust for readability */
   }
 
   .card-text,

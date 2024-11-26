@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2024 at 06:00 AM
+-- Generation Time: Nov 25, 2024 at 01:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -82,20 +82,25 @@ CREATE TABLE `orders` (
   `product_id` int(11) NOT NULL,
   `product_name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `selected_variation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`selected_variation`)),
   `discount_price` decimal(10,2) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `variation_id` int(11) DEFAULT NULL,
   `variation_name` varchar(255) DEFAULT NULL,
-  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `shipping` int(11) DEFAULT NULL,
+  `total_payment` decimal(10,2) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `saved` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `user_id`, `basket_item_id`, `price`, `product_id`, `product_name`, `quantity`, `selected_variation`, `discount_price`, `image`, `variation_id`, `variation_name`, `added_at`) VALUES
-(12, 1, 104, 700.00, 2, 'Unicorn Dream', 1, '{\"variation_id\":3,\"variation_name\":\"Pink Unicorn Dream\",\"discount_price\":\"660.00\",\"image\":\"https://via.placeholder.com/255?text=Pink+Unicorn+Dream\"}', 660.00, NULL, 3, NULL, '2024-11-24 21:56:56');
+INSERT INTO `orders` (`order_id`, `user_id`, `basket_item_id`, `price`, `product_id`, `product_name`, `quantity`, `discount_price`, `image`, `variation_id`, `variation_name`, `added_at`, `shipping`, `total_payment`, `payment_method`, `saved`) VALUES
+(22, 1, 104, 700.00, 2, 'Unicorn Dream', 1, 660.00, 'https://via.placeholder.com/255?text=Pink+Unicorn+Dream', 3, 'Pink Unicorn Dream', '2024-11-25 00:37:16', 120, 3421.50, 'N/A', 1101),
+(23, 1, 105, 1200.00, 8, 'Elephant Hugs', 3, 1097.00, 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs', 15, 'Gray Elephant Hugs', '2024-11-25 00:37:16', 120, 3421.50, 'N/A', 1101),
+(24, 1, 106, 500.00, 1, 'Bear Buddy Bestfriend Bayot', 1, 451.00, 'https://via.placeholder.com/255?text=Brown+Bear+Buddy', 1, 'Brown Bear Buddy', '2024-11-25 00:37:16', 120, 3421.50, 'N/A', 1101);
 
 -- --------------------------------------------------------
 
@@ -127,7 +132,19 @@ INSERT INTO `products` (`id`, `name`, `description`, `price`, `discountPrice`, `
 (5, 'Bunny Hop', 'Cute bunny plush with floppy ears and soft fur.', 600.00, 580.00, 4.60, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
 (6, 'Dragon Puff', 'A fierce but friendly dragon plush with detailed wings.', 299.99, 200.00, 3.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
 (7, 'Foxy Friend', 'Charming fox plush with a bushy tail and sly expression.', 520.00, 500.00, 4.40, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
-(8, 'Elephant Hugs', 'A large elephant plush toy with soft gray fur.', 1200.00, 1100.00, 4.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3');
+(8, 'Elephant Hugs', 'A large elephant plush toy with soft gray fur.', 1200.00, 1100.00, 4.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(9, 'Giraffe Giggles', 'A tall, soft giraffe plush with big eyes and a playful smile.', 750.00, 700.00, 4.85, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(10, 'Koala Kuddles', 'A cute and soft koala plush with a eucalyptus leaf.', 500.00, 450.00, 4.70, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(11, 'Lion King', 'A majestic lion plush with a golden mane and fierce eyes.', 950.00, 900.00, 4.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(12, 'Zebra Zing', 'A black and white striped zebra plush with a unique design.', 600.00, 550.00, 4.60, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(13, 'Crocodile Crunch', 'A tough but friendly crocodile plush with an engaging grin.', 650.00, 600.00, 4.55, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(14, 'Penguin Pals', 'A pair of adorable penguin plushies with cozy scarves.', 800.00, 750.00, 4.90, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(15, 'Monkey Mischief', 'A playful monkey plush with a cheeky smile.', 700.00, 650.00, 4.70, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(16, 'Teddy Bear Deluxe', 'A premium teddy bear plush with a soft, velvety coat.', 1200.00, 1100.00, 4.95, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(17, 'Rabbit Snuggles', 'A fluffy white rabbit plush with floppy ears.', 500.00, 480.00, 4.60, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(18, 'Fox Fables', 'A soft fox plush with a warm and inviting expression.', 450.00, 420.00, 4.50, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(19, 'Polar Bear Pal', 'A large and cuddly polar bear plush perfect for hugs.', 1000.00, 950.00, 4.80, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3'),
+(20, 'Sloth Snuggler', 'A relaxing sloth plush with long limbs for extra comfort.', 800.00, 750.00, 4.75, 'https://via.placeholder.com/255?text=Image+1', 'https://via.placeholder.com/255?text=Image+2', 'https://via.placeholder.com/255?text=Image+3');
 
 -- --------------------------------------------------------
 
@@ -227,7 +244,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `created_at`) VALUES
-(1, 'Kairu', 'projectemail@mail.com', 'minnano123', '2024-11-23 07:22:08');
+(1, 'Kairu', 'projectemail@mail.com', 'minnano123', '2024-11-23 07:22:08'),
+(2, 'Exze', 'randomemail@gmail.com', '123minnano', '2024-11-25 06:57:14');
 
 -- --------------------------------------------------------
 
@@ -263,7 +281,31 @@ INSERT INTO `variations` (`variations_id`, `product_id`, `variation_name`, `disc
 (13, 7, 'Orange Foxy Friend', 508.00, 'https://via.placeholder.com/255?text=Orange+Foxy+Friend'),
 (14, 7, 'Brown Foxy Friend', 498.00, 'https://via.placeholder.com/255?text=Brown+Foxy+Friend'),
 (15, 8, 'Gray Elephant Hugs', 1097.00, 'https://via.placeholder.com/255?text=Gray+Elephant+Hugs'),
-(16, 8, 'Pink Elephant Hugs', 1101.00, 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs');
+(16, 8, 'Pink Elephant Hugs', 1101.00, 'https://via.placeholder.com/255?text=Pink+Elephant+Hugs'),
+(71, 9, 'Yellow Giraffe Giggles', 705.00, 'https://via.placeholder.com/255?text=Yellow+Giraffe+Giggles'),
+(72, 9, 'Brown Giraffe Giggles', 710.00, 'https://via.placeholder.com/255?text=Brown+Giraffe+Giggles'),
+(73, 10, 'Gray Koala Kuddles', 455.00, 'https://via.placeholder.com/255?text=Gray+Koala+Kuddles'),
+(74, 10, 'Brown Koala Kuddles', 460.00, 'https://via.placeholder.com/255?text=Brown+Koala+Kuddles'),
+(75, 11, 'Gold Lion King', 905.00, 'https://via.placeholder.com/255?text=Gold+Lion+King'),
+(76, 11, 'Brown Lion King', 910.00, 'https://via.placeholder.com/255?text=Brown+Lion+King'),
+(77, 12, 'Black and White Zebra Zing', 555.00, 'https://via.placeholder.com/255?text=Black+and+White+Zebra+Zing'),
+(78, 12, 'Gray Zebra Zing', 565.00, 'https://via.placeholder.com/255?text=Gray+Zebra+Zing'),
+(79, 13, 'Green Crocodile Crunch', 605.00, 'https://via.placeholder.com/255?text=Green+Crocodile+Crunch'),
+(80, 13, 'Gray Crocodile Crunch', 610.00, 'https://via.placeholder.com/255?text=Gray+Crocodile+Crunch'),
+(81, 14, 'Black Penguin Pals', 755.00, 'https://via.placeholder.com/255?text=Black+Penguin+Pals'),
+(82, 14, 'White Penguin Pals', 765.00, 'https://via.placeholder.com/255?text=White+Penguin+Pals'),
+(83, 15, 'Brown Monkey Mischief', 655.00, 'https://via.placeholder.com/255?text=Brown+Monkey+Mischief'),
+(84, 15, 'Gray Monkey Mischief', 660.00, 'https://via.placeholder.com/255?text=Gray+Monkey+Mischief'),
+(85, 16, 'Pink Teddy Bear Deluxe', 1105.00, 'https://via.placeholder.com/255?text=Pink+Teddy+Bear+Deluxe'),
+(86, 16, 'White Teddy Bear Deluxe', 1115.00, 'https://via.placeholder.com/255?text=White+Teddy+Bear+Deluxe'),
+(87, 17, 'White Rabbit Snuggles', 485.00, 'https://via.placeholder.com/255?text=White+Rabbit+Snuggles'),
+(88, 17, 'Gray Rabbit Snuggles', 495.00, 'https://via.placeholder.com/255?text=Gray+Rabbit+Snuggles'),
+(89, 18, 'Red Fox Fables', 420.00, 'https://via.placeholder.com/255?text=Red+Fox+Fables'),
+(90, 18, 'Gray Fox Fables', 430.00, 'https://via.placeholder.com/255?text=Gray+Fox+Fables'),
+(91, 19, 'White Polar Bear Pal', 955.00, 'https://via.placeholder.com/255?text=White+Polar+Bear+Pal'),
+(92, 19, 'Gray Polar Bear Pal', 960.00, 'https://via.placeholder.com/255?text=Gray+Polar+Bear+Pal'),
+(93, 20, 'Brown Sloth Snuggler', 755.00, 'https://via.placeholder.com/255?text=Brown+Sloth+Snuggler'),
+(94, 20, 'Gray Sloth Snuggler', 765.00, 'https://via.placeholder.com/255?text=Gray+Sloth+Snuggler');
 
 -- --------------------------------------------------------
 
@@ -379,13 +421,13 @@ ALTER TABLE `checkout_unused`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `shipping_addresses`
@@ -403,13 +445,13 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `variations`
 --
 ALTER TABLE `variations`
-  MODIFY `variations_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `variations_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `vouchers`

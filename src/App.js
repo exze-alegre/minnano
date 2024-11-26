@@ -6,6 +6,8 @@ import Home from "./components/pages/Home";
 import ProductPage from "./components/pages/ProductPage";
 import Checkout from "./components/pages/Checkout";
 import OrderSuccess from "./components/pages/OrderSuccess";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   const [cart, setCart] = useState([]);
