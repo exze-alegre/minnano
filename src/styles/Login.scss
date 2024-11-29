@@ -1,21 +1,24 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sawarabi+Gothic&display=swap");
 
-h2{
+h2 {
   font-family: "Sawarabi Gothic", sans-serif;
 }
 
 .body-row {
-  background-color: #BC002D; /* Crimson background color */
+  background-color: $red-600; /* Crimson background color */
   color: #fff; /* Optional: Set text color to white for contrast */
 }
 
-a{
+a {
   text-decoration: none;
-  color: black ;
+  color: black;
 }
 
-#LoginCard{
-  background-color: #D96565;
+#LoginCard {
+  background-color: #d96565;
 }
 /* Login Form Styling */
 .login-right {
@@ -23,6 +26,7 @@ a{
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  height: 600px;
 }
 
 .login-form {
@@ -32,12 +36,7 @@ a{
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
-}
-
-.login-form h2 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #333;
+  font-family: "Sawarabi Gothic", sans-serif;
 }
 
 .error {
@@ -106,6 +105,24 @@ button.toggle-button:hover {
   justify-content: center;
   gap: 10px;
   margin-top: 15px;
+}
+
+.forgor {
+  font-size: 12px;
+  color: $light;
+  padding: 0 !important;
+}
+
+.placeholder-light-gray {
+  &::placeholder {
+    color: #d3d3d3;
+    opacity: 1;
+  }
+}
+
+.error-text-left {
+  text-align: left !important; /* Force left alignment */
+  display: block;
 }
 
 .social-button {

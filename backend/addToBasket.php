@@ -1,22 +1,34 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
+session_start(); // Ensure session is started at the top
+
+// Set headers for CORS and JSON response
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Credentials: true");
+header('Content-Type: application/json');
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Debugging session data
+error_log("Session Data: " . print_r($_SESSION, true));
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
+if (!isset($_SESSION['user_id'])) {
+    // If no user ID found in session, return an error
+    echo json_encode([
+        'success' => false,
+        'error' => 'No user ID found in session'
+    ]);
     exit();
 }
 
+$user_id = $_SESSION['user_id'];
+
+// Database connection parameters
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "minnano";
 
-// Create connection
+// Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
@@ -25,12 +37,12 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Read the JSON input
+// Read the JSON input data
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
 // Validate required fields
-$required_fields = ['user_id', 'product_id', 'variation_id', 'discount_price', 'quantity'];
+$required_fields = ['product_id', 'variation_id', 'discount_price', 'quantity'];
 foreach ($required_fields as $field) {
     if (!isset($data[$field])) {
         echo json_encode(['success' => false, 'error' => "Missing required field: $field"]);
@@ -39,13 +51,12 @@ foreach ($required_fields as $field) {
 }
 
 // Sanitize and validate input
-$user_id = filter_var($data['user_id'], FILTER_VALIDATE_INT);
 $product_id = filter_var($data['product_id'], FILTER_VALIDATE_INT);
 $variation_id = filter_var($data['variation_id'], FILTER_VALIDATE_INT);
 $discount_price = filter_var($data['discount_price'], FILTER_VALIDATE_FLOAT);
 $quantity = filter_var($data['quantity'], FILTER_VALIDATE_INT);
 
-if ($user_id === false || $product_id === false || $variation_id === false || $discount_price === false || $quantity === false) {
+if ($product_id === false || $variation_id === false || $discount_price === false || $quantity === false) {
     echo json_encode(['success' => false, 'error' => 'Invalid data types provided']);
     exit();
 }
@@ -60,7 +71,7 @@ $stmt_check->execute();
 $result = $stmt_check->get_result();
 
 if ($result->num_rows > 0) {
-    // If item exists, update quantity
+    // If item exists, update the quantity
     $row = $result->fetch_assoc();
     $new_quantity = $row['quantity'] + $quantity;
 
@@ -74,7 +85,7 @@ if ($result->num_rows > 0) {
         echo json_encode(['success' => false, 'error' => 'Failed to update quantity']);
     }
 } else {
-    // If item doesn't exist, insert new item
+    // If item doesn't exist, insert the new item
     $sql_insert = "INSERT INTO basket_items (user_id, product_id, variation_id, discount_price, quantity, added_at) 
                    VALUES (?, ?, ?, ?, ?, ?)";
     $stmt_insert = $conn->prepare($sql_insert);

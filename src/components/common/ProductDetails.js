@@ -7,18 +7,34 @@ import Notifications from "../common/Notification"; // Import Notifications comp
 import "../../styles/ProductDetails.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ProductDetails = ({
-  product,
-  addToBasket,
-  selectedVariation,
-  onVariationSelect,
-  basketItems,
-}) => {
+const ProductDetails = ({ product, selectedVariation, onVariationSelect }) => {
   const [quantity, setQuantity] = useState(1);
   const [showVariationError, setShowVariationError] = useState(false); // To manage the error message visibility
   const [notifications, setNotifications] = useState([]); // State for notifications
+  const [userId, setUserId] = useState(null); // State to store user_id from session
   const variationDropdownRef = useRef(null); // Ref for the dropdown
   const rating = Math.round(product?.rating || 0); // Safe access to product rating
+  const [item, setItem] = useState(null);
+  // Fetch user ID when component mounts
+  useEffect(() => {
+    fetch("http://localhost/minnano/backend/getUserIdFromSession.php", {
+      method: "GET",
+      credentials: "include", // Make sure cookies are sent with the request
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // Log the response to inspect the session and user data
+        if (data.status === "success") {
+          setUserId(data.user.user_id); // Set user_id in state
+        } else {
+          alert(data.message || "Failed to retrieve user ID.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user ID:", error);
+        alert("An error occurred while fetching the user ID.");
+      });
+  }, []);
 
   useEffect(() => {
     if (selectedVariation) {
@@ -36,7 +52,6 @@ const ProductDetails = ({
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
   };
-
   const handleAddToBasket = () => {
     if (!selectedVariation) {
       setShowVariationError(true); // Show the error message
@@ -56,43 +71,52 @@ const ProductDetails = ({
       return;
     }
 
-    const item = {
-      user_id: 1, // Ensure this is correct, it can be dynamically set if needed
+    if (!userId) {
+      alert("User not logged in.");
+      return;
+    }
+
+    // Set the item data to trigger the useEffect
+    setItem({
+      user_id: userId, // Use user_id from session
       product_id: product.id,
       variation_id: selectedVariation?.variation_id || null,
       discount_price:
         selectedVariation?.discount_price || product.discountPrice,
       quantity,
-    };
+    });
+  };
 
-    console.log("Sending item to backend:", item); // Debugging line
+  useEffect(() => {
+    if (!item) return; // Don't run the effect if item is null
 
-    // Send data to backend API
+    // Fetch request to backend when the `item` changes
     fetch("http://localhost/minnano/backend/addToBasket.php", {
-      method: "POST",
+      method: "POST", // Use POST for sending data
+      credentials: "include", // Make sure cookies are sent with the request
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(item),
+      body: JSON.stringify(item), // Send the item object as JSON
     })
       .then((response) => response.json())
       .then((data) => {
-        if (!data.success) {
-          console.error("Failed to add item:", data.error);
-          alert(data.error || "Failed to add item to basket.");
-        } else {
+        console.log(data); // Log the response to inspect the session and user data
+        if (data.success) {
           // Add notification for successful addition to cart
           setNotifications((prevNotifications) => [
             ...prevNotifications,
             { id: Date.now(), message: "Item added to basket!" },
           ]);
+        } else {
+          alert(data.error || "An error occurred while adding the item.");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         alert("An error occurred while adding the item to the basket.");
       });
-  };
+  }, [item]); // Dependency array will run when `item` change
 
   const handleQuantityChange = (event) => {
     const value = event.target.value;

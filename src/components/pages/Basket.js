@@ -60,7 +60,10 @@ const Basket = () => {
   };
 
   const fetchBasketItems = () => {
-    fetch("http://localhost/minnano/backend/getBasketItems.php?user_id=1")
+    fetch("http://localhost/minnano/backend/getBasketItems.php", {
+      method: "GET",
+      credentials: "include", // Ensure cookies (session) are sent
+    })
       .then((response) => {
         console.log("Response status:", response.status);
         if (!response.ok) {
@@ -70,16 +73,17 @@ const Basket = () => {
       })
       .then((data) => {
         console.log("Data received:", data);
-        if (Array.isArray(data)) {
-          setBasketItems(data);
+        if (data.success) {
+          // Correctly set the basket items from the 'data' field
+          setBasketItems(data.data); // Update the state with the basket items
         } else {
-          console.error("Failed to fetch basket items or the array is empty");
-          setBasketItems([]);
+          console.error("Error fetching basket items:", data.error);
+          setBasketItems([]); // Fallback if something went wrong
         }
       })
       .catch((error) => {
         console.error("Error:", error.message);
-        setBasketItems([]);
+        setBasketItems([]); // Fallback if there’s an error with the fetch
       });
   };
 

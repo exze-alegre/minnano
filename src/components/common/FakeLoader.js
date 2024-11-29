@@ -12,6 +12,7 @@ const FakeLoader = forwardRef(({ nextPage }, ref) => {
       setIsLoading(true);
       // Simulate a delay before navigation
       setTimeout(() => {
+        setIsLoading(false); // Hide the loader
         navigate(nextPage);
       }, 400); // Adjust delay as needed
     },

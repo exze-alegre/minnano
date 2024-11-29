@@ -11,6 +11,7 @@ const Checkout = () => {
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
+  const [userId, setUserId] = useState(null); // State to store user_id from session
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [showVoucherModal, setShowVoucherModal] = useState(false);
   const loaderRef = useRef();
@@ -28,6 +29,26 @@ const Checkout = () => {
       .then((response) => response.json())
       .then((data) => setVouchers(data))
       .catch((error) => console.error("Error fetching vouchers:", error));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost/minnano/backend/getUserIdFromSession.php", {
+      method: "GET",
+      credentials: "include", // Make sure cookies are sent with the request
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // Log the response to inspect the session and user data
+        if (data.status === "success") {
+          setUserId(data.user.user_id); // Set user_id in state
+        } else {
+          alert(data.message || "Failed to retrieve user ID.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user ID:", error);
+        alert("An error occurred while fetching the user ID.");
+      });
   }, []);
 
   const handleVoucherSelect = (voucher) => {
@@ -76,26 +97,37 @@ const Checkout = () => {
 
   const placeOrder = async () => {
     loaderRef.current.startLoading(); // Trigger the loader
+    console.log("Current User ID:", userId); // Log the user ID to the console
+
+    // Check if userId is available from state
+    if (userId === null) {
+      alert("User is not logged in.");
+      return; // Exit if no user ID is found
+    }
 
     // Construct the orderData dynamically from the checkoutItems and additional fields
-    const orderData = checkoutItems.map((item) => ({
-      user_id: 1, // Replace with the actual user ID
-      basket_item_id: item.basket_item_id,
-      price: item.price, // Original price
-      product_id: item.product_id,
-      product_name: item.product_name,
-      quantity: item.quantity,
-      discount_price: item.discount_price, // Discounted price
-      image: item.selected_variation.image,
-      variation_name: item.selected_variation.variation_name,
-      variation_id: item.variation_id,
-      shipping: shippingFee, // Shipping fee
-      total_payment: totalPayment, // Total payment after discount and shipping
-      payment_method: selectedPaymentMethod
-        ? selectedPaymentMethod.variation_name
-        : "N/A", // Payment method
-      saved: (merchandiseSubtotal - totalPayment + shippingFee).toFixed(2), // Saved amount
-    }));
+    const orderData = {
+      user_id: userId, // Use user_id from state
+      items: checkoutItems.map((item) => ({
+        basket_item_id: item.basket_item_id,
+        price: item.price,
+        product_id: item.product_id,
+        product_name: item.product_name,
+        quantity: item.quantity,
+        discount_price: item.discount_price,
+        image: item.selected_variation.image,
+        variation_name: item.selected_variation.variation_name,
+        variation_id: item.variation_id,
+        shipping: shippingFee,
+        total_payment: totalPayment,
+        payment_method: selectedPaymentMethod
+          ? selectedPaymentMethod.variation_name
+          : "N/A",
+        saved: (merchandiseSubtotal - totalPayment + shippingFee).toFixed(2),
+      })),
+    };
+
+    console.log("Order Data Sent:", orderData); // Log the order data being sent
 
     try {
       const response = await fetch(
@@ -103,9 +135,10 @@ const Checkout = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Ensure content type is set to JSON
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(orderData), // Send the dynamically created JSON data
+          body: JSON.stringify(orderData),
+          credentials: "include", // Important to include the session cookie
         }
       );
 
@@ -114,7 +147,7 @@ const Checkout = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      console.log(data); // Log the response from the backend
     } catch (error) {
       console.error("Error placing order:", error);
     }

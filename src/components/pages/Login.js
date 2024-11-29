@@ -1,77 +1,139 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Redirect on successful login\
-import Container from "react-bootstrap/Container";
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/Login.scss";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Navbar from "react-bootstrap/Navbar";
+import FakeLoader from "../common/FakeLoader";
+import { Form, Container, Row, Col, Button } from "react-bootstrap";
+import axios from "axios";
+import Notifications from "../common/Notification"; // Import Notifications component
+import Cookies from "js-cookie"; // Import the js-cookie library
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRegister, setIsRegister] = useState(false); // Toggle between login and register
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Track loading state
-  const navigate = useNavigate();
+  const [isRegister, setIsRegister] = useState(false);
+  const [emailValid, setEmailValid] = useState(true);
+  const [notifications, setNotifications] = useState([]); // State to manage notifications
+  const loaderRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate(); // Use this hook for navigation
 
-  const handleSubmit = async (e) => {
+  const handleButtonClick = () => {
+    setIsRegister(!isRegister);
+    loaderRef.current.startLoading();
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setEmailValid(emailPattern.test(value));
+  };
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
 
-    // Validate inputs
-    if (username.trim() === "" || password.trim() === "") {
-      setError("Both fields are required.");
-      return;
+    let errorMessages = [];
+
+    if (!email) {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { id: Date.now(), message: "Please enter your email." },
+      ]);
+      return; // Stop the submission
+    }
+    if (!password) {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { id: Date.now(), message: "Please enter your password." },
+      ]);
+      return; // Stop the submission
     }
 
-    const endpoint = isRegister
-      ? `${process.env.REACT_APP_API_URL}/register`
-      : `${process.env.REACT_APP_API_URL}/login`;
+    if (!email && !password) {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { id: Date.now(), message: "Please enter your login details." },
+      ]);
+      return; // Stop the submission
+    }
 
-    setLoading(true); // Show loading state
+    if (!emailValid && email) {
+      errorMessages.push("Please enter a valid email address.");
+    }
+
+    if (errorMessages.length > 0) {
+      setNotifications(
+        errorMessages.map((message, index) => ({
+          id: Date.now() + index,
+          message,
+        }))
+      );
+      return; // Stop the form submission if there are validation errors
+    }
+
+    // Start the loader
+    setIsLoading(true);
+
     try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        if (isRegister) {
-          alert("Registration successful! You can now log in.");
-          setIsRegister(false); // Switch to login mode
-        } else {
-          // Login successful
-          localStorage.setItem("token", data.token); // Save token
-          navigate("/home"); // Redirect to Home.js
+      const response = await axios.post(
+        "http://localhost/minnano/backend/login.php",
+        { email, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true, // Ensure credentials (cookies) are included
         }
+      );
+
+      if (response.data.status === "success") {
+        setNotifications([]); // Clear notifications on success
+
+        // Stop the loader and navigate
+        setIsLoading(false);
+        navigate("/"); // Navigate to the homepage
       } else {
-        setError(data.message || "An error occurred.");
+        setNotifications([{ id: Date.now(), message: response.data.message }]);
+        setIsLoading(false); // Stop the loader on failure
       }
-    } catch (err) {
-      setError("Failed to connect to the server.");
-    } finally {
-      setLoading(false); // Hide loading state
+    } catch (error) {
+      console.error("There was an error logging in:", error);
+      setNotifications([
+        {
+          id: Date.now(),
+          message: "An error occurred, please try again later.",
+        },
+      ]);
+      setIsLoading(false); // Stop the loader if there's an error
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLoginSubmit(e); // Trigger the submit function when Enter key is pressed
     }
   };
 
   return (
-    <Container fluid className="bg-red py-3 min-vh-100 d-flex flex-column">
-      {/* Header */}
-      <Row className="align-items-center justify-content-between pt-0">
-        <Col xs="auto" className="m-2">
+    <Container fluid className="bg-red min-vh-100 d-flex flex-column">
+      <Row className="align-items-center justify-content-between pt-2">
+        <Col xs="auto" className="m-2 mt-0">
           <img src="https://via.placeholder.com/99" alt="Logo" />
         </Col>
-        <Col xs={9} className="text-start">
-          <h2 className="mb-1">MINNANO</h2>
-          <p className="mb-0">Everyone’s online Shopping mall</p>
+        <Col xs={10} className="text-start">
+          <h2 className="mb-0 text-danger">MINNANO</h2>
+          <p className="mb-2">Everyone’s online Shopping mall</p>
         </Col>
-        <Col xs={2} className="">
-          <a href="#">Need Help papi?</a>
+        <Col xs={1}>
+          <a href="#" className="text-danger">
+            Need Help?
+          </a>
         </Col>
       </Row>
-      {/* Body */}
+
+      {/* Notification Component */}
+      {notifications.length > 0 && (
+        <Notifications notifications={notifications} />
+      )}
+
       <Row className="flex-grow-1 justify-content-center align-items-center body-row">
         <Col xs={6} className="text-center">
           <img src="https://via.placeholder.com/387" alt="Placeholder" />
@@ -80,139 +142,133 @@ const Login = () => {
         <Col xs={6} className="text-center">
           <div className="login-right">
             <div
-              className="login-form"
+              className="login-form py-5"
               style={{
                 backgroundColor: "#D96565",
                 padding: "20px",
-                borderRadius: "8px",
+                height: "500px",
+                borderRadius: "px",
               }}
             >
-              <h2>{isRegister ? "Register" : "Login"}</h2>
-              {error && (
-                <p className="error" style={{ color: "white" }}>
-                  {error}
-                </p>
-              )}
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label
-                    htmlFor="username"
-                    className="d-block text-start"
-                    style={{ marginBottom: "5px" }}
-                  >
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      marginBottom: "15px",
-                    }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label
-                    htmlFor="password"
-                    className="d-block text-start"
-                    style={{ marginBottom: "5px" }}
-                  >
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      marginBottom: "15px",
-                    }}
-                  />
-                </div>
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      backgroundColor: "#fff",
-                      borderRadius: "4px",
-                      border: "none",
-                    }}
-                  >
-                    {loading
-                      ? "Processing..."
-                      : isRegister
-                      ? "Register"
-                      : "Login"}
-                  </button>
-                </div>
-              </form>
-              <div className="social-buttons gap-4">
-                <Navbar className="bg-body-tertiary px-2">
-                  <Container>
-                    <Navbar.Brand href="#home">
-                      <img
-                        alt=""
-                        src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-                        width="25"
-                        height="25"
-                        className="d-inline-block align-top"
-                      />{" "}
-                      Facebook
-                    </Navbar.Brand>
-                  </Container>
-                </Navbar>
-                <Navbar className="bg-body-tertiary px-2">
-                  <Container>
-                    <Navbar.Brand href="#home">
-                      <img
-                        alt=""
-                        src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
-                        width="25"
-                        height="25"
-                        className="d-inline-block align-top"
-                      />{" "}
-                      Google
-                    </Navbar.Brand>
-                  </Container>
-                </Navbar>
-              </div>
-              <p className="text-center">
-                {isRegister
-                  ? "Already have an account?"
-                  : "Don't have an account?"}{" "}
-                <button
-                  type="button"
-                  onClick={() => setIsRegister(!isRegister)}
-                  className="toggle-button"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
+              <h3 className="text-start text-light px-3 mb-4">
+                {isRegister ? "Sign up" : "Sign in"}
+              </h3>
+              <Row>
+                <Col>
+                  <Form className="px-3 mb-2" onSubmit={handleLoginSubmit}>
+                    <Form.Group controlId="formEmail">
+                      <Form.Control
+                        type="email"
+                        placeholder="Email"
+                        style={{
+                          width: "100%",
+                          height: "50px",
+                          borderRadius: "14px",
+                        }}
+                        className="placeholder-light-gray"
+                        value={email}
+                        onChange={handleEmailChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form className="px-3 pt-3" onKeyDown={handleKeyDown}>
+                    <Form.Group controlId="formPassword">
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        style={{
+                          width: "100%",
+                          height: "50px",
+                          borderRadius: "14px",
+                        }}
+                        className="placeholder-light-gray"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Row className="forgor d-flex justify-content-between px-3 pt-1 mb-4">
+                      <Row className="d-flex align-items-center w-100 mx-1 px-4 mt-2 mb-3">
+                        <Col
+                          xs={8}
+                          className="d-flex justify-content-start p-0"
+                        >
+                          <p className="m-0">Forgot password?</p>
+                        </Col>
+                        <Col
+                          xs={4}
+                          className="d-flex justify-content-end align-items-end p-0"
+                        >
+                          <p className="m-0">Forgot Email?</p>
+                        </Col>
+                      </Row>
+                      <Row className="mb-2 d-flex align-items-center w-100 mx-1 px-5">
+                        <Col className="d-flex justify-content-center">
+                          <Button
+                            variant="danger"
+                            className="w-100 text-light"
+                            onClick={handleLoginSubmit} // Using onClick instead of type="submit"
+                          >
+                            {isRegister ? "Register" : "Login"}
+                          </Button>
+                        </Col>
+                      </Row>
+
+                      <Row className="d-flex align-items-center w-100 mx-1 px-5">
+                        <Col xs={5} className="p-0">
+                          <hr className="bg-light m-0" />
+                        </Col>
+                        <Col xs={2} className="text-center">
+                          <p className="text-light m-0">or</p>
+                        </Col>
+                        <Col xs={5} className="p-0">
+                          <hr className="bg-light m-0" />
+                        </Col>
+                      </Row>
+                    </Row>
+                  </Form>
+                </Col>
+              </Row>
+
+              <Container className="d-flex justify-content-center gap-5">
+                {/* Facebook Button */}
+                <Button
+                  variant="light"
+                  className="d-flex align-items-center me-3"
                 >
-                  {isRegister ? "Login" : "Register"}
-                </button>
-              </p>
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                    alt="Facebook Logo"
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  Facebook
+                </Button>
+
+                {/* Google Button */}
+                <Button variant="light" className="d-flex align-items-center">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                    alt="Google Logo"
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  Google
+                </Button>
+              </Container>
             </div>
           </div>
         </Col>
       </Row>
-      {/* Footer */}
       <Row className="justify-content-center text-start g-5">
         <Col xs={2} className="d-flex flex-column align-items-start">
           <b className="mb-2">Customer Service</b>
@@ -238,4 +294,5 @@ const Login = () => {
     </Container>
   );
 };
+
 export default Login;
