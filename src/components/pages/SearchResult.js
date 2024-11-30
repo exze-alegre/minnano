@@ -1,3 +1,5 @@
+//SearchResult.js
+
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../common/Header";
@@ -5,9 +7,9 @@ import ProductCard from "../common/ProductCard";
 
 const SearchResults = ({ loggedIn, userProfile }) => {
   // Make sure to call useLocation to get the location object
-  const location = useLocation(); // Correctly invoking useLocation()
+  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const searchQuery = searchParams.get("query") || ""; // Get the 'query' parameter
+  const searchQuery = searchParams.get("query") || "";
 
   const [products, setProducts] = useState([]);
 

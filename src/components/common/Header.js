@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   FaSearch,
   FaRegHeart,
@@ -19,28 +20,51 @@ import {
 import "../../styles/Header.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Header = ({ loggedIn, userProfile }) => {
+const Header = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost/minnano/backend/checkLogin.php",
+          { withCredentials: true }
+        );
+        console.log(response.data); // Debug response
+        if (response.data.loggedIn) {
+          setLoggedIn(true);
+          setUserProfile(response.data.user);
+        } else {
+          setLoggedIn(true);
+        }
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      }
+    };
+
+    checkLogin();
+  }, []);
   const handleSearch = async (e) => {
     e.preventDefault();
-
     if (searchQuery) {
-      // Redirect to the search results page with the query
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
   };
 
-  // Function to navigate to homepage when brand is clicked
   const handleBrandClick = () => {
-    navigate("/"); // Navigate to the homepage
+    navigate("/");
+  };
+
+  const handleBasketClick = () => {
+    navigate("/basket");
   };
 
   return (
-    <Navbar expand="lg header pt-4">
+    <Navbar expand="lg" className="header pt-4">
       <Container className="d-flex flex-column">
-        {/* Top Header */}
         <Row className="w-100 align-items-center mb-3">
           <Col>
             <Navbar.Brand
@@ -78,7 +102,7 @@ const Header = ({ loggedIn, userProfile }) => {
             <div className="d-flex justify-content-end align-items-center gap-3">
               {loggedIn ? (
                 <Nav.Link href="#profile">
-                  <FaRegUser />
+                  <FaRegUser className="profile" />
                 </Nav.Link>
               ) : (
                 <Nav.Link href="#signup" className="signup">
@@ -88,14 +112,13 @@ const Header = ({ loggedIn, userProfile }) => {
               <Nav.Link href="#Likes">
                 <FaRegHeart className="likes" />
               </Nav.Link>
-              <Nav.Link href="#Basket">
+              <Nav.Link onClick={handleBasketClick}>
                 <FaShoppingBasket className="basket" />
               </Nav.Link>
             </div>
           </Col>
         </Row>
 
-        {/* Bottom Navigation */}
         <Row className="w-100 justify-content-md-center bottom-nav">
           <Col xs="auto">
             <Nav.Link href="#New">
