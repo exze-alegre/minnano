@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, Spinner } from "react-bootstrap";
 
-const FakeLoader = forwardRef(({ nextPage }, ref) => {
+const FakeLoader = forwardRef(({ nextPage, loadingDelay = 400 }, ref) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const FakeLoader = forwardRef(({ nextPage }, ref) => {
       setTimeout(() => {
         setIsLoading(false); // Hide the loader
         navigate(nextPage);
-      }, 400); // Adjust delay as needed
+      }, loadingDelay); // Use the passed loadingDelay prop
     },
   }));
 

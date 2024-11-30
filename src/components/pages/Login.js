@@ -88,8 +88,7 @@ const Login = () => {
         setNotifications([]); // Clear notifications on success
 
         // Stop the loader and navigate
-        setIsLoading(false);
-        navigate("/"); // Navigate to the homepage
+        loaderRef.current.startLoading(); // Trigger the loader
       } else {
         setNotifications([{ id: Date.now(), message: response.data.message }]);
         setIsLoading(false); // Stop the loader on failure
@@ -214,6 +213,11 @@ const Login = () => {
                           >
                             {isRegister ? "Register" : "Login"}
                           </Button>
+                          <FakeLoader
+                            ref={loaderRef}
+                            nextPage="/"
+                            loadingDelay={1000}
+                          />
                         </Col>
                       </Row>
 
@@ -265,6 +269,32 @@ const Login = () => {
                   Google
                 </Button>
               </Container>
+              <div>
+                <p className="text-center mt-4">
+                  {isRegister
+                    ? "Already have an account?"
+                    : "Don't have an account?"}{" "}
+                  <button
+                    type="button"
+                    onClick={handleButtonClick}
+                    className="toggle-button"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#fff",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {isRegister ? "Login" : "Register"}
+                  </button>
+                </p>
+
+                <FakeLoader
+                  ref={loaderRef}
+                  nextPage={isRegister ? "/login" : "/login"}
+                />
+                {isLoading && <FakeLoader ref={loaderRef} nextPage={"/"} />}
+              </div>
             </div>
           </div>
         </Col>

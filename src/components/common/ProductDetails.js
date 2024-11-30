@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import Stars from "./Stars";
 import ShippingInfo from "./ShippingInfo";
 import CustomDropdown from "./CustomDropdown";
+import FakeLoader from "../common/FakeLoader";
 import Notifications from "../common/Notification"; // Import Notifications component
 import "../../styles/ProductDetails.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,25 +15,27 @@ const ProductDetails = ({ product, selectedVariation, onVariationSelect }) => {
   const [userId, setUserId] = useState(null); // State to store user_id from session
   const variationDropdownRef = useRef(null); // Ref for the dropdown
   const rating = Math.round(product?.rating || 0); // Safe access to product rating
+  const [hasClickedAddToBasket, setHasClickedAddToBasket] = useState(false); // Tracks if button was clicked
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false); // Tracks user login status
   const [item, setItem] = useState(null);
-  // Fetch user ID when component mounts
+  const loaderRef = useRef();
+
   useEffect(() => {
     fetch("http://localhost/minnano/backend/getUserIdFromSession.php", {
       method: "GET",
-      credentials: "include", // Make sure cookies are sent with the request
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Log the response to inspect the session and user data
         if (data.status === "success") {
-          setUserId(data.user.user_id); // Set user_id in state
+          setUserId(data.user.user_id); // Set user ID
+          setIsUserLoggedIn(true); // Mark user as logged in
         } else {
-          alert(data.message || "Failed to retrieve user ID.");
+          setIsUserLoggedIn(false); // User is not logged in
         }
       })
       .catch((error) => {
         console.error("Error fetching user ID:", error);
-        alert("An error occurred while fetching the user ID.");
       });
   }, []);
 
@@ -52,12 +55,12 @@ const ProductDetails = ({ product, selectedVariation, onVariationSelect }) => {
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
   };
+
   const handleAddToBasket = () => {
+    setHasClickedAddToBasket(true); // Set clicked state to true when button is clicked
+
     if (!selectedVariation) {
       setShowVariationError(true); // Show the error message
-      if (variationDropdownRef.current) {
-        variationDropdownRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the dropdown
-      }
       return;
     }
 
@@ -71,9 +74,9 @@ const ProductDetails = ({ product, selectedVariation, onVariationSelect }) => {
       return;
     }
 
-    if (!userId) {
-      alert("User not logged in.");
-      return;
+    // Only alert for login status when button is clicked and the user is not logged in
+    if (!isUserLoggedIn) {
+      loaderRef.current.startLoading(); // Trigger the loader
     }
 
     // Set the item data to trigger the useEffect
@@ -108,8 +111,6 @@ const ProductDetails = ({ product, selectedVariation, onVariationSelect }) => {
             ...prevNotifications,
             { id: Date.now(), message: "Item added to basket!" },
           ]);
-        } else {
-          alert(data.error || "An error occurred while adding the item.");
         }
       })
       .catch((error) => {
@@ -196,6 +197,7 @@ const ProductDetails = ({ product, selectedVariation, onVariationSelect }) => {
           >
             Add to Basket
           </Button>
+          <FakeLoader ref={loaderRef} nextPage="/login" />
 
           <ShippingInfo />
 
