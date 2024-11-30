@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from "react";
 import ProductCard from "../common/ProductCard";
 import Header from "../common/Header";
-import "../../styles/Home.scss"; // Assuming you have custom styles for the homepage
+import Footer from "../common/Footer";
+import "../../styles/Home.scss";
+import ProductCarousel from "../common/ProductCarousel";
+import { Row, Col } from "react-bootstrap";
+import ProductBanner from "../common/ProductBanner"; // Update the import
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -17,8 +22,8 @@ const Home = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data); // Log the data to the console to check it
-        setProducts(data); // Assuming you're using useState to store products
+        console.log(data);
+        setProducts(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -28,14 +33,42 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="container-fluid p-0 m-0">
+    <div
+      className="home-layout"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh", // Ensures full viewport height
+      }}
+    >
       <Header />
-      <h1>Product List</h1>
-      <div className="product-list-container">
-        {products.map((product) => (
-          <ProductCard product={product} size="small" />
-        ))}
-      </div>
+      <main
+        style={{
+          flex: 1, // Expands to take available space
+          padding: "5px",
+          backgroundColor: "#FFF9F9",
+        }}
+      >
+        <ProductCarousel />
+        <h1>Featured Products</h1>
+        <Row className="product-list-container">
+          {products.slice(0, 5).map((product, index) => (
+            <Col key={index} md={12} className="mb-5">
+              <ProductCard product={product} size="small" />
+            </Col>
+          ))}
+        </Row>
+        <ProductBanner />
+        <h1>Check out more from us</h1>
+        <Row className="product-list-container">
+          {products.slice(6, 11).map((product, index) => (
+            <Col key={index} md={12} className="mb-5">
+              <ProductCard product={product} size="small" />
+            </Col>
+          ))}
+        </Row>
+      </main>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };
