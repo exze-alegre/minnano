@@ -21,9 +21,22 @@
 }
 
 .empty-basket-message {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  font-size: 18px;
-  color: #555;
+  margin-top: 1rem; /* Adjust space between back button and empty cart message */
+}
+
+.empty-basket-message p {
+  margin-top: 10px; /* Adjust spacing between the icon and the text */
+  font-size: 1.2rem; /* Optional: Adjust text size */
+  color: grey;
+}
+
+.empty-basket-message svg {
+  font-size: 3rem; /* Adjust the size of the icon */
 }
 
 .quantity-control {

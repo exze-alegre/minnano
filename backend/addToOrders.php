@@ -47,35 +47,42 @@ if (!isset($data['user_id']) || $data['user_id'] !== $user_id) {
     exit();
 }
 
-// Insert each item into the orders table
+// Generate a unique order group ID with 5 digits
+$order_group_id = str_pad(rand(10000, 99999), 5, "0", STR_PAD_LEFT);  // 5-digit random number
+
+// Log to ensure the order_group_id is being generated correctly
+error_log("Generated order_group_id: " . $order_group_id);
+
+// Insert each item into the orders table with the order group ID
 foreach ($data['items'] as $item) {
     // SQL query to insert the item into orders table
     $sql = "INSERT INTO orders 
-                (user_id, basket_item_id, price, product_id, product_name, quantity, 
+                (order_group_id, user_id, basket_item_id, price, product_id, product_name, quantity, 
                  discount_price, image, variation_id, variation_name, added_at, shipping, 
                  total_payment, payment_method, saved) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
 
     // Prepare the SQL statement for inserting into the orders table
     $stmt = $conn->prepare($sql);
-    
+
     if ($stmt) {
-        // Bind parameters
-        $stmt->bind_param("iiddsssissdsss", 
+        // Bind parameters including the missing fields (discount_price, image, variation_id, variation_name)
+        $stmt->bind_param("siidisidsisddsd", 
+            $order_group_id,    
             $data['user_id'], 
             $item['basket_item_id'], 
             $item['price'], 
             $item['product_id'], 
-            $item['product_name'], 
+            $item['product_name'],
             $item['quantity'], 
             $item['discount_price'], 
-            $item['image'], 
-            $item['variation_id'], 
-            $item['variation_name'], 
-            $item['shipping'], 
-            $item['total_payment'], 
-            $item['payment_method'], 
-            $item['saved']
+            $item['image'],        
+            $item['variation_id'],   
+            $item['variation_name'],
+            $item['shipping'],      
+            $item['total_payment'],  
+            $item['payment_method'],  
+            $item['saved']           
         );
 
         // Execute the query
@@ -90,31 +97,13 @@ foreach ($data['items'] as $item) {
             $deleteStmt->bind_param("i", $item['basket_item_id']);
             $deleteStmt->execute();
         } else {
-            echo json_encode([
-                'success' => false,
-                'error' => 'Failed to prepare delete statement'
-            ]);
+            echo json_encode([ 'success' => false, 'error' => 'Failed to prepare delete statement' ]);
             exit();
         }
     } else {
-        echo json_encode([
-            'success' => false,
-            'error' => 'Failed to prepare insert statement'
-        ]);
+        echo json_encode([ 'success' => false, 'error' => 'Failed to prepare insert statement' ]);
         exit();
     }
 }
-
-echo json_encode([
-    'success' => true,
-    'message' => 'Order placed successfully and items removed from basket.'
-]);
-
-
-
-echo json_encode([
-    'success' => true,
-    'message' => 'Order placed successfully'
-]);
 
 ?>

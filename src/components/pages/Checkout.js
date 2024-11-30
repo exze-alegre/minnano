@@ -12,7 +12,6 @@ const Checkout = () => {
   const [vouchers, setVouchers] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [userId, setUserId] = useState(null); // State to store user_id from session
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [showVoucherModal, setShowVoucherModal] = useState(false);
   const loaderRef = useRef();
 
@@ -66,6 +65,11 @@ const Checkout = () => {
     }
   };
 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
+    id: 1,
+    variation_name: "Cash on Delivery",
+  });
+
   const handlePaymentMethodSelect = (method) => {
     setSelectedPaymentMethod(method);
   };
@@ -75,25 +79,31 @@ const Checkout = () => {
     0
   );
 
-  let totalPayment = merchandiseSubtotal;
+  const totalPrice = checkoutItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
-  // Apply voucher discount
+  let voucherDiscount = 0;
   if (selectedVoucher) {
     if (selectedVoucher.discount_type === "percentage") {
-      totalPayment -=
+      voucherDiscount =
         merchandiseSubtotal * (selectedVoucher.discount_value / 100);
     } else if (selectedVoucher.discount_type === "fixed") {
-      if (merchandiseSubtotal >= selectedVoucher.min_spend) {
-        totalPayment -= selectedVoucher.discount_value;
-      }
+      voucherDiscount = selectedVoucher.discount_value;
     }
   }
-
-  // Add shipping fee to total payment
+  // Apply voucher discount to merchandise subtotal and add shipping fee
+  let totalPayment = merchandiseSubtotal - voucherDiscount;
   const shippingFee = 120; // Hardcoded shipping fee
   totalPayment += shippingFee;
+  // Add shipping fee to total payment
 
-  totalPayment = totalPayment < 0 ? 0 : totalPayment.toFixed(2);
+  const savedAmount = (
+    totalPrice -
+    merchandiseSubtotal -
+    voucherDiscount
+  ).toFixed(2);
 
   const placeOrder = async () => {
     loaderRef.current.startLoading(); // Trigger the loader
@@ -123,7 +133,7 @@ const Checkout = () => {
         payment_method: selectedPaymentMethod
           ? selectedPaymentMethod.variation_name
           : "N/A",
-        saved: (merchandiseSubtotal - totalPayment + shippingFee).toFixed(2),
+        saved: savedAmount,
       })),
     };
 
@@ -148,6 +158,14 @@ const Checkout = () => {
 
       const data = await response.json();
       console.log(data); // Log the response from the backend
+
+      if (data.success) {
+        alert(
+          `Order placed successfully! Order Group ID: ${data.order_group_id}`
+        );
+      } else {
+        alert("Failed to place order. Please try again.");
+      }
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -236,7 +254,7 @@ const Checkout = () => {
 
               <h4>Payment Method</h4>
               <CustomDropdown
-                title="Cash on Delivery"
+                title={selectedPaymentMethod.variation_name} // Use the default payment method
                 items={[
                   { id: 1, variation_name: "Cash on Delivery" },
                   { id: 2, variation_name: "Credit Card" },
@@ -259,12 +277,7 @@ const Checkout = () => {
                       : Number(selectedVoucher.discount_value).toFixed(2)}
                   </p>
                 )}
-                <p>
-                  Saved: ₱
-                  {(merchandiseSubtotal - totalPayment + shippingFee).toFixed(
-                    2
-                  )}
-                </p>
+                <p>Saved: ₱ {savedAmount}</p>
                 <hr />
                 <h5>Total Payment: ₱{totalPayment}</h5>
               </div>

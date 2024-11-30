@@ -85,7 +85,6 @@ const Header = () => {
       // Handle the response (e.g., navigate to login page)
       if (response.data.status === "success") {
         loaderRefHome.current.startLoading(); // Trigger loader
-        window.location.reload();
       }
     } catch (error) {
       console.error("Error during logout:", error);
