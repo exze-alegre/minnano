@@ -100,15 +100,18 @@ const Checkout = () => {
     }
   }
 
+  // Calculate total payment after applying voucher discount
   let totalPayment = merchandiseSubtotal - voucherDiscount;
   const shippingFee = 120;
   totalPayment += shippingFee;
 
+  // Calculate the amount saved (only item price difference, no shipping fee)
   const savedAmount = (
     totalPrice -
-    merchandiseSubtotal -
-    voucherDiscount
+    (merchandiseSubtotal - voucherDiscount)
   ).toFixed(2);
+
+  console.log("Total Saved:", savedAmount); // This should show ₱ 419.48
 
   const placeOrder = async () => {
     loaderRef.current.startLoading();

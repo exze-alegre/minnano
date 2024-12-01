@@ -75,9 +75,11 @@ const MyOrders = () => {
     }, {});
   };
 
-  const updateOrderStatus = async (orderId) => {
+  const updateOrderStatus = async (groupId) => {
+    const ordersInGroup = groupedOrders[groupId]; // Get all orders in the group
+
     const formData = new URLSearchParams();
-    formData.append("orderId", orderId);
+    formData.append("orderGroupId", groupId);
     formData.append("newStatus", 2); // Status 2 for 'arrived'
 
     const response = await fetch(
@@ -91,12 +93,14 @@ const MyOrders = () => {
         credentials: "include",
       }
     );
-    window.location.reload();
+
     const data = await response.json();
     if (data.success) {
-      // Update the order status in the UI
+      // Update all orders within the group
       const updatedOrders = orders.map((order) =>
-        order.order_id === orderId ? { ...order, status_id: 2 } : order
+        ordersInGroup.some((o) => o.order_id === order.order_id)
+          ? { ...order, status_id: 2 } // Update status for all orders in the group
+          : order
       );
       setOrders(updatedOrders);
     } else {
@@ -206,10 +210,10 @@ const MyOrders = () => {
                 <Button
                   variant="danger"
                   className="rounded-pill px-4 ms-3 my-3"
-                  onClick={() => updateOrderStatus(group[0].order_id)}
+                  onClick={() => updateOrderStatus(groupId)} // Pass groupId instead of orderId
                   disabled={
                     sessionStorage.getItem("visitedGroupId") !== groupId
-                  } // Disable the button if the groupId doesn't match
+                  }
                 >
                   Order Received
                 </Button>

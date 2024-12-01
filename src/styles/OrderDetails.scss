@@ -54,3 +54,81 @@
 .col.position-relative {
   z-index: 2;
 }
+
+.order-details-container {
+  border: 1px solid #ddd; /* Apply border to the parent container */
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.order-detail-item-container {
+  padding: 10px;
+  margin-bottom: 10px; /* Use margin for spacing between items */
+  /* Remove any borders from individual items here */
+}
+
+.order-detail-item-container img {
+  max-width: 100%; /* Ensure the image is responsive and fits within the column */
+  height: auto;
+}
+
+.product-name {
+  font-family: "Lora", sans-serif;
+  font-size: 20px;
+}
+
+.discount {
+  font-size: 20px;
+  color: $cyan-300;
+}
+
+.price-buttons-row {
+  display: flex;
+  justify-content: flex-start; // Aligns content to the left
+}
+
+.buttons-col {
+  display: flex;
+  justify-content: flex-start; // Aligns the buttons to the left within the column
+  gap: 10px; // Optional: Adds space between the buttons
+}
+
+.rate-btn,
+.misc-btn {
+  margin-right: 10px; // Optional: Adds spacing between the buttons if needed
+}
+
+.rate-btn {
+  margin-top: 10px;
+  width: 100%;
+  background-color: $red-500;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  padding: 10px 0;
+  border-radius: 50px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $red-700;
+  }
+
+  &:active {
+    background-color: $red-500; /* Keep the same background color on click */
+    box-shadow: none; /* Optionally remove any box-shadow applied during active state */
+  }
+}
+
+.misc-btn {
+  margin-top: 10px;
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  padding: 10px 0;
+  border-radius: 50px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
