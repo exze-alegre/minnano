@@ -306,12 +306,12 @@ const MyOrders = () => {
               <Col>
                 <Nav.Item>
                   <Nav.Link
-                    eventKey="completed"
+                    eventKey="cancelled"
                     className={`text-center mx-2 rounded-pill ${
-                      activeTab === "completed" ? "active-tab" : ""
+                      activeTab === "cancelled" ? "active-tab" : ""
                     }`}
                   >
-                    Completed
+                    Cancelled
                   </Nav.Link>
                 </Nav.Item>
               </Col>
@@ -323,7 +323,7 @@ const MyOrders = () => {
               <Tab.Pane eventKey="arrived">
                 {renderOrders(filterOrdersByStatus(2))}
               </Tab.Pane>
-              <Tab.Pane eventKey="completed">
+              <Tab.Pane eventKey="cancelled">
                 {renderOrders(filterOrdersByStatus(3))}
               </Tab.Pane>
             </Tab.Content>

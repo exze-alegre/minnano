@@ -27,6 +27,28 @@
   }
 }
 
+/* Ensure the main container takes the full height */
+.order-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Take up at least the full height of the viewport */
+}
+
+.order-page-container {
+  flex: 1; /* Allow this container to grow and take up remaining space */
+  padding-bottom: 60px; /* Adjust to add some space for the footer */
+}
+
+footer {
+  margin-top: auto; /* Push footer to the bottom */
+}
+
+/* Optional: Style the footer more if necessary */
+footer .footer-content {
+  text-align: center;
+  padding: 10px 0;
+}
+
 .tabs-container {
   max-width: 1000px;
 }
