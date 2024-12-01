@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from "react";
+=======
+import React, { useState, useEffect } from "react";
+>>>>>>> Homepage-design
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -21,6 +25,7 @@ import "../../styles/Header.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import FakeLoader from "../common/FakeLoader";
 import Cookies from "js-cookie"; // Import js-cookie for cookie management
+import Minnano from "../assets/minnano.png";
 
 const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -52,6 +57,27 @@ const Header = () => {
     checkLogin();
   }, []);
 
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost/minnano/backend/checkLogin.php",
+          { withCredentials: true }
+        );
+        console.log(response.data); // Debug response
+        if (response.data.loggedIn) {
+          setLoggedIn(true);
+          setUserProfile(response.data.user);
+        } else {
+          setLoggedIn(true);
+        }
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      }
+    };
+
+    checkLogin();
+  }, []);
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchQuery) {
@@ -96,17 +122,16 @@ const Header = () => {
       <Container className="d-flex flex-column">
         <Row className="w-100 align-items-center mb-3">
           <Col>
-            <Navbar.Brand
-              onClick={handleBrandClick}
-              style={{ cursor: "pointer" }}
-            >
+    <Navbar.Brand onClick={handleBrandClick} style={{ cursor: "pointer" }}>
               <img
-                alt="Minnano"
-                src="https://via.placeholder.com/40"
-                className="d-inline-block"
-              />{" "}
-              MINNANO
-            </Navbar.Brand>
+        alt="Minnano"
+        src={Minnano}
+        className="d-inline-block"
+        style={{ marginBottom: "10px", marginRight: "10px"}} />
+  <span style={{ marginTop: "5px", display: "inline-block" }}>MINNANO</span>
+    </Navbar.Brand>
+
+
           </Col>
           <Col xs={8}>
             <Form inline onSubmit={handleSearch}>
@@ -179,6 +204,7 @@ const Header = () => {
                   <FaShoppingBasket className="basket" />
                 </Nav.Link>
               )}
+
             </div>
             <FakeLoader ref={loaderRefLogin} nextPage="/login" />
             <FakeLoader ref={loaderRefHome} nextPage="/" />
