@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Header from "../common/Header";
+import BackButton from "../common/BackButton";
+import { FaBox } from "react-icons/fa";
 import { Container, Row, Col, Tab, Nav, Button } from "react-bootstrap";
-import "../../styles/OrderPage.scss";
+import "../../styles/MyOrders.scss";
 
-const OrderPage = () => {
+const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -201,7 +203,10 @@ const OrderPage = () => {
         );
       })
     ) : (
-      <p>No orders in this status</p>
+      <div className="no-orders-container">
+        <FaBox className="no-orders-icon" />
+        <p className="no-orders-text">No orders in this status</p>
+      </div>
     );
   };
 
@@ -216,81 +221,73 @@ const OrderPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="order-page">
-        <Header />
-        <Container className="order-page-container">
-          <h1>Error: {error}</h1>
-        </Container>
-      </div>
-    );
-  }
-
   return (
     <div className="order-page">
       <Header />
       <Container className="order-page-container">
-        <Tab.Container
-          activeKey={activeTab}
-          onSelect={(key) => setActiveTab(key)}
-        >
-          <Nav
-            variant="pills"
-            className="mb-3 d-flex justify-content-center bg-light rounded-pill p-2 w-100"
+        <BackButton />
+        <Container className="tabs-container">
+          <Tab.Container
+            activeKey={activeTab}
+            onSelect={(key) => setActiveTab(key)}
           >
-            <Col>
-              <Nav.Item>
-                <Nav.Link
-                  eventKey="onShipping"
-                  className={`text-center mx-2 rounded-pill ${
-                    activeTab === "onShipping" ? "active-tab" : ""
-                  }`}
-                >
-                  On Shipping
-                </Nav.Link>
-              </Nav.Item>
-            </Col>
-            <Col>
-              <Nav.Item>
-                <Nav.Link
-                  eventKey="arrived"
-                  className={`text-center mx-2 rounded-pill ${
-                    activeTab === "arrived" ? "active-tab" : ""
-                  }`}
-                >
-                  Arrived
-                </Nav.Link>
-              </Nav.Item>
-            </Col>
-            <Col>
-              <Nav.Item>
-                <Nav.Link
-                  eventKey="completed"
-                  className={`text-center mx-2 rounded-pill ${
-                    activeTab === "completed" ? "active-tab" : ""
-                  }`}
-                >
-                  Completed
-                </Nav.Link>
-              </Nav.Item>
-            </Col>
-          </Nav>
-          <Tab.Content>
-            <Tab.Pane eventKey="onShipping">
-              {renderOrders(filterOrdersByStatus(1))}
-            </Tab.Pane>
-            <Tab.Pane eventKey="arrived">
-              {renderOrders(filterOrdersByStatus(2))}
-            </Tab.Pane>
-            <Tab.Pane eventKey="completed">
-              {renderOrders(filterOrdersByStatus(3))}
-            </Tab.Pane>
-          </Tab.Content>
-        </Tab.Container>
+            <Nav
+              variant="pills"
+              className="mb-3 d-flex justify-content-center bg-light rounded-pill p-2 w-100"
+            >
+              <Col>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="onShipping"
+                    className={`text-center mx-2 rounded-pill ${
+                      activeTab === "onShipping" ? "active-tab" : ""
+                    }`}
+                  >
+                    On Shipping
+                  </Nav.Link>
+                </Nav.Item>
+              </Col>
+              <Col>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="arrived"
+                    className={`text-center mx-2 rounded-pill ${
+                      activeTab === "arrived" ? "active-tab" : ""
+                    }`}
+                  >
+                    Arrived
+                  </Nav.Link>
+                </Nav.Item>
+              </Col>
+              <Col>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="completed"
+                    className={`text-center mx-2 rounded-pill ${
+                      activeTab === "completed" ? "active-tab" : ""
+                    }`}
+                  >
+                    Completed
+                  </Nav.Link>
+                </Nav.Item>
+              </Col>
+            </Nav>
+            <Tab.Content>
+              <Tab.Pane eventKey="onShipping">
+                {renderOrders(filterOrdersByStatus(1))}
+              </Tab.Pane>
+              <Tab.Pane eventKey="arrived">
+                {renderOrders(filterOrdersByStatus(2))}
+              </Tab.Pane>
+              <Tab.Pane eventKey="completed">
+                {renderOrders(filterOrdersByStatus(3))}
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
+        </Container>
       </Container>
     </div>
   );
 };
 
-export default OrderPage;
+export default MyOrders;

@@ -5,7 +5,7 @@
 
 .order-page-container {
   margin-top: 20px;
-  max-width: 1000px;
+  max-width: 1200px;
 
   .active-tab {
     background-color: #dc3545 !important; /* Bootstrap danger color */
@@ -25,6 +25,10 @@
   .nav-link {
     transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
   }
+}
+
+.tabs-container {
+  max-width: 1000px;
 }
 
 .order-group-container {
@@ -55,4 +59,25 @@
 
 .total-price {
   color: $cyan-300;
+}
+
+.no-orders-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 300px; // Adjust to ensure it's tall enough to center content
+  text-align: center;
+  color: #888; // Light gray color
+}
+
+.no-orders-icon {
+  font-size: 3rem; // Adjust icon size as needed
+  margin-bottom: 1rem; // Add some spacing below the icon
+}
+
+.no-orders-text {
+  font-size: 1.2rem;
+  font-weight: 500;
 }

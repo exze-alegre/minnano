@@ -3,17 +3,24 @@ import Header from "../common/Header";
 import ShippingAddress from "../common/ShippingAdress";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import FakeLoader from "../common/FakeLoader";
-import CustomDropdown from "../common/CustomDropdown"; // You can still keep the CustomDropdown for the payment method
-import VoucherModal from "../common/VoucherModal"; // Import the new VoucherModal
+import CustomDropdown from "../common/CustomDropdown";
+import VoucherModal from "../common/VoucherModal";
 import "../../styles/Checkout.scss";
 
 const Checkout = () => {
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
-  const [userId, setUserId] = useState(null); // State to store user_id from session
+  const [userId, setUserId] = useState(null);
   const [showVoucherModal, setShowVoucherModal] = useState(false);
   const loaderRef = useRef();
+  const [shippingAddressId, setShippingAddressId] = useState(null);
+
+  // Set a default shipping address ID if none is selected
+  useEffect(() => {
+    const defaultShippingAddress = 1; // You can set this to a default address ID you have in your system
+    setShippingAddressId((prevId) => prevId || defaultShippingAddress);
+  }, []);
 
   useEffect(() => {
     const storedCheckoutItems = JSON.parse(
@@ -33,13 +40,13 @@ const Checkout = () => {
   useEffect(() => {
     fetch("http://localhost/minnano/backend/getUserIdFromSession.php", {
       method: "GET",
-      credentials: "include", // Make sure cookies are sent with the request
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Log the response to inspect the session and user data
+        console.log(data);
         if (data.status === "success") {
-          setUserId(data.user.user_id); // Set user_id in state
+          setUserId(data.user.user_id);
         } else {
           alert(data.message || "Failed to retrieve user ID.");
         }
@@ -56,7 +63,6 @@ const Checkout = () => {
       0
     );
 
-    // Check if the voucher's minimum spend is met
     if (merchandiseSubtotal >= voucher.min_spend) {
       setSelectedVoucher(voucher);
       setShowVoucherModal(false);
@@ -93,11 +99,10 @@ const Checkout = () => {
       voucherDiscount = selectedVoucher.discount_value;
     }
   }
-  // Apply voucher discount to merchandise subtotal and add shipping fee
+
   let totalPayment = merchandiseSubtotal - voucherDiscount;
-  const shippingFee = 120; // Hardcoded shipping fee
+  const shippingFee = 120;
   totalPayment += shippingFee;
-  // Add shipping fee to total payment
 
   const savedAmount = (
     totalPrice -
@@ -106,18 +111,17 @@ const Checkout = () => {
   ).toFixed(2);
 
   const placeOrder = async () => {
-    loaderRef.current.startLoading(); // Trigger the loader
-    console.log("Current User ID:", userId); // Log the user ID to the console
+    loaderRef.current.startLoading();
+    console.log("Current User ID:", userId);
 
-    // Check if userId is available from state
     if (userId === null) {
       alert("User is not logged in.");
-      return; // Exit if no user ID is found
+      return;
     }
 
-    // Construct the orderData dynamically from the checkoutItems and additional fields
     const orderData = {
-      user_id: userId, // Use user_id from state
+      user_id: userId,
+      shipping_address_id: shippingAddressId,
       items: checkoutItems.map((item) => ({
         basket_item_id: item.basket_item_id,
         price: item.price,
@@ -137,7 +141,7 @@ const Checkout = () => {
       })),
     };
 
-    console.log("Order Data Sent:", orderData); // Log the order data being sent
+    console.log("Order Data Sent:", orderData);
 
     try {
       const response = await fetch(
@@ -148,7 +152,7 @@ const Checkout = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(orderData),
-          credentials: "include", // Important to include the session cookie
+          credentials: "include",
         }
       );
 
@@ -157,7 +161,7 @@ const Checkout = () => {
       }
 
       const data = await response.json();
-      console.log(data); // Log the response from the backend
+      console.log(data);
 
       if (data.success) {
         alert(
@@ -176,7 +180,7 @@ const Checkout = () => {
       <Header />
       <Container className="checkout-page-container mt-3">
         <Row className="checkout-row px-4">
-          <ShippingAddress />
+          <ShippingAddress onSelectAddress={setShippingAddressId} />
         </Row>
         <Row className="px-5">
           <Col md={8}>

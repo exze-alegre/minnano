@@ -4,7 +4,8 @@ import "../../styles/ShippingAddress.scss"; // Import the SCSS file
 import { IoLocationSharp } from "react-icons/io5";
 import { Row, Col, Button, Container, Modal, Form } from "react-bootstrap"; // Import React-Bootstrap components
 
-const ShippingAddress = () => {
+const ShippingAddress = ({ onSelectAddress }) => {
+  // Added the prop onSelectAddress
   const [shippingAddresses, setShippingAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(1); // Default address is with id 1
   const [loading, setLoading] = useState(true);
@@ -14,11 +15,14 @@ const ShippingAddress = () => {
   useEffect(() => {
     console.log("Component mounted");
 
-    // Fetch the shipping addresses from the PHP endpoint
+    // Fetch the shipping addresses from the PHP endpoint, without the user_id query parameter
     axios
-      .get("http://localhost/minnano/backend/getShippingAddress.php?user_id=1")
+      .get("http://localhost/minnano/backend/getShippingAddress.php", {
+        withCredentials: true, // Ensure cookies are sent with the request
+      })
       .then((response) => {
         setShippingAddresses(response.data);
+        console.log("Shipping Addresses after fetch:", response.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -34,6 +38,7 @@ const ShippingAddress = () => {
 
   const handleSelectAddress = (id) => {
     setSelectedAddressId(id); // Update the selected address
+    onSelectAddress(id); // Pass the selected address ID to the parent component
     setShowModal(false); // Close the modal after selecting an address
   };
 
@@ -48,7 +53,9 @@ const ShippingAddress = () => {
     <Container>
       {Array.isArray(shippingAddresses) && shippingAddresses.length > 0 ? (
         shippingAddresses
-          .filter((address) => address.id === selectedAddressId) // Only show the selected address
+          .filter(
+            (address) => address.shipping_address_id === selectedAddressId
+          ) // Use correct field name
           .map((address, index) => (
             <div key={index} className="shipping-address">
               <div className="address-card">
@@ -61,7 +68,6 @@ const ShippingAddress = () => {
 
                 <Row className="m-0 d-flex align-items-center">
                   <Col xs={11}>
-                    {/* Full Name, Number, Address all on the same line and take up full width */}
                     <p>
                       <strong>{address.full_name}</strong> |
                       <span> {address.contact_number}</span> |
@@ -73,7 +79,6 @@ const ShippingAddress = () => {
                     xs={1}
                     className="d-flex justify-content-end align-items-center"
                   >
-                    {/* Change Button aligned to the right and vertically centered */}
                     <Button
                       variant="danger"
                       className="change-button"
@@ -98,12 +103,12 @@ const ShippingAddress = () => {
         <Modal.Body>
           <Form>
             {shippingAddresses.map((address) => (
-              <div key={address.id} className="address-option">
+              <div key={address.shipping_address_id} className="address-option">
                 <Row className="mb-3 position-relative">
                   <Col>
                     <Form.Check
                       type="radio"
-                      id={`address-${address.id}`}
+                      id={`address-${address.shipping_address_id}`}
                       label={
                         <>
                           <strong>{address.full_name}</strong> |
@@ -112,8 +117,12 @@ const ShippingAddress = () => {
                         </>
                       }
                       name="shippingAddress"
-                      checked={address.id === selectedAddressId}
-                      onChange={() => handleSelectAddress(address.id)}
+                      checked={
+                        address.shipping_address_id === selectedAddressId
+                      }
+                      onChange={() =>
+                        handleSelectAddress(address.shipping_address_id)
+                      }
                     />
                   </Col>
                   <Col xs={1} className="d-flex justify-content-end">

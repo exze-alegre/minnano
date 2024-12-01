@@ -6,7 +6,7 @@ import Home from "./components/pages/Home";
 import ProductPage from "./components/pages/ProductPage";
 import Checkout from "./components/pages/Checkout";
 import OrderSuccess from "./components/pages/OrderSuccess";
-import OrderPage from "./components/pages/OrderPage";
+import MyOrders from "./components/pages/MyOrders";
 import Login from "./components/pages/Login"; // Import the Login component
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
           />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-successful" element={<OrderSuccess />} />
-          <Route path="/orders" element={<OrderPage />} />
+          <Route path="/orders" element={<MyOrders />} />
         </Routes>
       </Router>
     </div>

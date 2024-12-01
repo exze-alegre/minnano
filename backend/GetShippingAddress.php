@@ -1,15 +1,35 @@
 <?php
-// Allow CORS (Cross-Origin Resource Sharing)
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET");
-header("Access-Control-Allow-Headers: Content-Type");
+// Start the session
+session_start();
 
+// Allow CORS for the frontend
+header('Access-Control-Allow-Origin: http://localhost:3000');  // Replace with actual frontend URL
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// Handle OPTIONS preflight request
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// Check if the session is valid
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode([
+        'success' => false,
+        'error' => 'No user ID found in session.'
+    ]);
+    exit;
+}
+
+// Database connection details
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "minnano";
 
-// Create connection
+// Create database connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
@@ -17,11 +37,12 @@ if ($conn->connect_error) {
     die(json_encode(['success' => false, 'error' => 'Connection failed: ' . $conn->connect_error]));
 }
 
-$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
+// Fetch the user ID from the session
+$user_id = $_SESSION['user_id'];
 
 if ($user_id) {
     // Prepare the SQL query to fetch data for the specific user
-    $query = "SELECT * FROM shipping_addresses WHERE user_id = ?";
+    $query = "SELECT shipping_address_id, full_name, address, contact_number FROM shipping_addresses WHERE user_id = ?";
 
     // Prepare the statement to prevent SQL injection
     if ($stmt = $conn->prepare($query)) {
