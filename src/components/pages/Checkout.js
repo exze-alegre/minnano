@@ -3,6 +3,7 @@ import Header from "../common/Header";
 import ShippingAddress from "../common/ShippingAdress";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import FakeLoader from "../common/FakeLoader";
+import Footer from "../common/Footer";
 import CustomDropdown from "../common/CustomDropdown";
 import VoucherModal from "../common/VoucherModal";
 import "../../styles/Checkout.scss";
@@ -301,7 +302,6 @@ const Checkout = () => {
           </Col>
         </Row>
       </Container>
-
       <VoucherModal
         show={showVoucherModal}
         onClose={() => setShowVoucherModal(false)} // Close the modal
@@ -309,6 +309,7 @@ const Checkout = () => {
         onSelectVoucher={handleVoucherSelect} // Handle voucher selection
         merchandiseSubtotal={merchandiseSubtotal} // Pass merchandiseSubtotal as a prop
       />
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

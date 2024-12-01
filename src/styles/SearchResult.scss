@@ -1,0 +1,21 @@
+.search-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .product-list-container {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); // Always 5 cards per row
+    gap: 5px; // Optional: Space between cards
+  }
+
+  .back-button {
+    margin-left: 200px;
+  }
+}
+
+.search-page-container {
+  flex: 1; // Make the main container take up available vertical space
+  max-width: 1300px;
+}

@@ -8,6 +8,7 @@ import Header from "../common/Header";
 import BackButton from "../common/BackButton";
 import OrderAddress from "../common/OrderAddress";
 import DeliveryTimeline from "../common/DeliveryTimeline";
+import Footer from "../common/Footer";
 import "../../styles/OrderDetails.scss";
 
 const OrderDetails = () => {
@@ -199,6 +200,7 @@ const OrderDetails = () => {
           </Row>
         </Container>
       </Container>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

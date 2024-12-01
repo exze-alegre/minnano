@@ -4,6 +4,7 @@ import BackButton from "../common/BackButton";
 import FakeLoader from "../common/FakeLoader";
 import BasketItem from "../common/BasketItem"; // Import the new BasketItem component
 import Notifications from "../common/Notification"; // Assuming you have a Notifications component
+import Footer from "../common/Footer";
 import { Container, Row, Col } from "react-bootstrap";
 import BasketEmptyIcon from "../assets/BasketEmptyIcon"; // Import your custom icon component
 import "../../styles/Basket.scss";
@@ -287,6 +288,7 @@ const Basket = () => {
         </Row>
         <Notifications notifications={notifications} />
       </Container>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

@@ -4,7 +4,9 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: "#F8F8F8", padding: "20px", marginTop: "40px" }}>
+    <footer
+      style={{ backgroundColor: "#F8F8F8", padding: "20px", marginTop: "40px" }}
+    >
       <Container>
         <Row className="justify-content-center text-start g-5">
           <Col xs={2} className="d-flex flex-column align-items-start">
@@ -32,15 +34,21 @@ const Footer = () => {
         <Row className="align-items-center">
           {/* Left-aligned paragraph */}
           <Col>
-            <p style={{ fontSize: "20px", color: "#666" }}>© 2024 MINNANO. All rights reserved.</p>
+            <p style={{ fontSize: "20px", color: "#666", marginBottom: "0" }}>
+              © 2024 MINNANO. All rights reserved.
+            </p>
           </Col>
           {/* Center-aligned paragraph */}
           <Col className="text-center">
-            <p style={{ fontSize: "20px", color: "#666", marginBottom: "0" }}>Ginama ni Rekzel ug Kairu</p>
+            <p style={{ fontSize: "20px", color: "#666", marginBottom: "0" }}>
+              Ginama ni Rekzel ug Kairu
+            </p>
           </Col>
           {/* Right-aligned paragraph */}
           <Col className="text-end">
-            <p style={{ fontSize: "20px", color: "#666", marginBottom: "0" }}>Terms of Service</p>
+            <p style={{ fontSize: "20px", color: "#666", marginBottom: "0" }}>
+              Terms of Service
+            </p>
           </Col>
         </Row>
       </Container>

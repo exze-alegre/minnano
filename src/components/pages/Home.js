@@ -8,7 +8,6 @@ import ProductCarousel from "../common/ProductCarousel";
 import { Row, Col } from "react-bootstrap";
 import ProductBanner from "../common/ProductBanner"; // Update the import
 
-
 const Home = () => {
   const [products, setProducts] = useState([]);
 
@@ -43,14 +42,16 @@ const Home = () => {
     >
       <Header />
       <main
+        className=""
         style={{
           flex: 1, // Expands to take available space
           padding: "5px",
-          backgroundColor: "#FFF9F9",
+          maxWidth: "1300px",
+          margin: "auto",
         }}
       >
         <ProductCarousel />
-        
+
         <h1 className="ms-5">Featured Products</h1>
         <Row className="product-list-container">
           {products.slice(0, 5).map((product, index) => (

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router
 import Header from "../common/Header";
 import BackButton from "../common/BackButton";
+import Footer from "../common/Footer";
+import ReviewModal from "../common/ReviewModal";
 import { FaBox } from "react-icons/fa";
 import {
   Container,
@@ -20,6 +22,7 @@ const MyOrders = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("onShipping");
   const [isReceivedEnabled, setIsReceivedEnabled] = useState(false); // Track if the button is enabled
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate(); // Initialize navigate
 
@@ -103,6 +106,7 @@ const MyOrders = () => {
           : order
       );
       setOrders(updatedOrders);
+      setShowModal(true); // Show the modal after updating status
     } else {
       setError(data.error);
     }
@@ -326,6 +330,9 @@ const MyOrders = () => {
           </Tab.Container>
         </Container>
       </Container>
+      <Footer /> {/* Footer is always at the bottom */}
+      <ReviewModal show={showModal} handleClose={() => setShowModal(false)} />
+      {/* Add the modal here */}
     </div>
   );
 };

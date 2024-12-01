@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from "react";
-=======
-import React, { useState, useEffect } from "react";
->>>>>>> Homepage-design
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -24,7 +20,6 @@ import {
 import "../../styles/Header.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import FakeLoader from "../common/FakeLoader";
-import Cookies from "js-cookie"; // Import js-cookie for cookie management
 import Minnano from "../assets/minnano.png";
 
 const Header = () => {
@@ -57,27 +52,6 @@ const Header = () => {
     checkLogin();
   }, []);
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost/minnano/backend/checkLogin.php",
-          { withCredentials: true }
-        );
-        console.log(response.data); // Debug response
-        if (response.data.loggedIn) {
-          setLoggedIn(true);
-          setUserProfile(response.data.user);
-        } else {
-          setLoggedIn(true);
-        }
-      } catch (error) {
-        console.error("Error checking login status:", error);
-      }
-    };
-
-    checkLogin();
-  }, []);
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchQuery) {
@@ -94,12 +68,15 @@ const Header = () => {
   };
 
   const handleBasketClick = () => {
-    navigate("/basket");
+    if (loggedIn) {
+      navigate("/basket");
+    } else {
+      handleSignupClick();
+    }
   };
 
   const handleLogout = async () => {
     try {
-      // Send logout request to the server
       const response = await axios.post(
         "http://localhost/minnano/backend/logout.php",
         null,
@@ -108,9 +85,10 @@ const Header = () => {
         }
       );
 
-      // Handle the response (e.g., navigate to login page)
       if (response.data.status === "success") {
-        loaderRefHome.current.startLoading(); // Trigger loader
+        setLoggedIn(false); // Update the state to reflect logged out status
+        setUserProfile(null); // Clear user profile data
+        loaderRefHome.current.startLoading(); // Trigger loader for navigation
       }
     } catch (error) {
       console.error("Error during logout:", error);
@@ -122,16 +100,20 @@ const Header = () => {
       <Container className="d-flex flex-column">
         <Row className="w-100 align-items-center mb-3">
           <Col>
-    <Navbar.Brand onClick={handleBrandClick} style={{ cursor: "pointer" }}>
+            <Navbar.Brand
+              onClick={handleBrandClick}
+              style={{ cursor: "pointer" }}
+            >
               <img
-        alt="Minnano"
-        src={Minnano}
-        className="d-inline-block"
-        style={{ marginBottom: "10px", marginRight: "10px"}} />
-  <span style={{ marginTop: "5px", display: "inline-block" }}>MINNANO</span>
-    </Navbar.Brand>
-
-
+                alt="Minnano"
+                src={Minnano}
+                className="d-inline-block"
+                style={{ marginBottom: "10px", marginRight: "10px" }}
+              />
+              <span style={{ marginTop: "5px", display: "inline-block" }}>
+                MINNANO
+              </span>
+            </Navbar.Brand>
           </Col>
           <Col xs={8}>
             <Form inline onSubmit={handleSearch}>
@@ -159,12 +141,10 @@ const Header = () => {
                   onMouseEnter={() => setDropdownVisible(true)}
                   onMouseLeave={() => setDropdownVisible(false)}
                 >
-                  {/* Icon remains unstyled */}
                   <FaRegUser className="profile" />
-
                   {dropdownVisible && (
                     <div
-                      className="dropdown-menu show" // Use Bootstrap's default dropdown class
+                      className="dropdown-menu show"
                       style={{
                         position: "absolute",
                         top: "100%",
@@ -174,14 +154,11 @@ const Header = () => {
                     >
                       <button
                         onClick={() => navigate("/orders")}
-                        className="dropdown-item" // Use Bootstrap's dropdown-item class
+                        className="dropdown-item"
                       >
                         Orders
                       </button>
-                      <button
-                        onClick={handleLogout}
-                        className="dropdown-item" // Use Bootstrap's dropdown-item class
-                      >
+                      <button onClick={handleLogout} className="dropdown-item">
                         Logout
                       </button>
                     </div>
@@ -195,16 +172,9 @@ const Header = () => {
               <Nav.Link href="#Likes">
                 <FaRegHeart className="likes" />
               </Nav.Link>
-              {loggedIn ? (
-                <Nav.Link onClick={handleBasketClick}>
-                  <FaShoppingBasket className="basket" />
-                </Nav.Link>
-              ) : (
-                <Nav.Link onClick={handleSignupClick}>
-                  <FaShoppingBasket className="basket" />
-                </Nav.Link>
-              )}
-
+              <Nav.Link onClick={handleBasketClick}>
+                <FaShoppingBasket className="basket" />
+              </Nav.Link>
             </div>
             <FakeLoader ref={loaderRefLogin} nextPage="/login" />
             <FakeLoader ref={loaderRefHome} nextPage="/" />
