@@ -5,7 +5,9 @@ import FakeLoader from "../common/FakeLoader";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
 import Notifications from "../common/Notification"; // Import Notifications component
+import Footer from "../common/Footer";
 import Cookies from "js-cookie"; // Import the js-cookie library
+import Minnano from "../assets/minnano255.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -112,10 +114,13 @@ const Login = () => {
   };
 
   return (
-    <Container fluid className="bg-red min-vh-100 d-flex flex-column">
-      <Row className="align-items-center justify-content-between pt-2">
-        <Col xs="auto" className="m-2 mt-0">
-          <img src="https://via.placeholder.com/99" alt="Logo" />
+    <div
+      fluid
+      className="login-page min-vh-100 d-flex flex-column px-0 overflow-hidden"
+    >
+      <Row className="login-header align-items-center justify-content-between py-1">
+        <Col xs="auto" className="ms-5 px-0">
+          <img src={Minnano} alt="Logo" style={{ width: "100px" }} />
         </Col>
         <Col xs={10} className="text-start">
           <h2 className="mb-0 text-danger">MINNANO</h2>
@@ -133,12 +138,19 @@ const Login = () => {
         <Notifications notifications={notifications} />
       )}
 
-      <Row className="flex-grow-1 justify-content-center align-items-center body-row">
-        <Col xs={6} className="text-center">
-          <img src="https://via.placeholder.com/387" alt="Placeholder" />
+      <Row className="d-flex justify-content-center align-items-center px-5">
+        <Col xs={7} className="text-center">
+          <img
+            src={Minnano}
+            alt="Placeholder"
+            style={{
+              width: "500px",
+            }}
+            className="rounded-circle"
+          />
         </Col>
 
-        <Col xs={6} className="text-center">
+        <Col xs={5} className="text-center">
           <div className="login-right">
             <div
               className="login-form py-5"
@@ -270,7 +282,7 @@ const Login = () => {
                 </Button>
               </Container>
               <div>
-                <p className="text-center mt-4">
+                <p className="text-center text-light mt-4">
                   {isRegister
                     ? "Already have an account?"
                     : "Don't have an account?"}{" "}
@@ -299,29 +311,8 @@ const Login = () => {
           </div>
         </Col>
       </Row>
-      <Row className="justify-content-center text-start g-5">
-        <Col xs={2} className="d-flex flex-column align-items-start">
-          <b className="mb-2">Customer Service</b>
-          <p className="mb-2">Help Center</p>
-          <p className="mb-2">Order Tracking</p>
-        </Col>
-        <Col xs={2} className="d-flex flex-column align-items-start">
-          <b className="mb-2">About MINNANO</b>
-          <p className="mb-2">About Us</p>
-          <p className="mb-2">Email</p>
-        </Col>
-        <Col xs={2} className="d-flex flex-column align-items-start">
-          <b className="mb-2">Follow us</b>
-          <p className="mb-2">Facebook</p>
-          <p className="mb-2">Instagram</p>
-        </Col>
-        <Col xs={2} className="d-flex flex-column align-items-start">
-          <b className="mb-2">Gikapoy nako</b>
-          <p className="mb-2">Why does it have to be this way</p>
-          <p className="mb-2">100 points na please</p>
-        </Col>
-      </Row>
-    </Container>
+      <Footer />
+    </div>
   );
 };
 
