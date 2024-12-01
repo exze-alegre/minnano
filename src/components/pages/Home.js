@@ -50,7 +50,8 @@ const Home = () => {
         }}
       >
         <ProductCarousel />
-        <h1>Featured Products</h1>
+        
+        <h1 className="ms-5">Featured Products</h1>
         <Row className="product-list-container">
           {products.slice(0, 5).map((product, index) => (
             <Col key={index} md={12} className="mb-5">
@@ -59,9 +60,9 @@ const Home = () => {
           ))}
         </Row>
         <ProductBanner />
-        <h1>Check out more from us</h1>
+        <h1 className="ms-5">Check out more from us</h1>
         <Row className="product-list-container">
-          {products.slice(6, 11).map((product, index) => (
+          {products.slice(6, 16).map((product, index) => (
             <Col key={index} md={12} className="mb-5">
               <ProductCard product={product} size="small" />
             </Col>

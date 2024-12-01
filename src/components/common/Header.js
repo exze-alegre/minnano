@@ -19,6 +19,8 @@ import {
 } from "react-bootstrap";
 import "../../styles/Header.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Minnano from "../assets/minnano.png";
+
 
 const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -67,17 +69,16 @@ const Header = () => {
       <Container className="d-flex flex-column">
         <Row className="w-100 align-items-center mb-3">
           <Col>
-            <Navbar.Brand
-              onClick={handleBrandClick}
-              style={{ cursor: "pointer" }}
-            >
+    <Navbar.Brand onClick={handleBrandClick} style={{ cursor: "pointer" }}>
               <img
-                alt="Minnano"
-                src="https://via.placeholder.com/40"
-                className="d-inline-block"
-              />{" "}
-              MINNANO
-            </Navbar.Brand>
+        alt="Minnano"
+        src={Minnano}
+        className="d-inline-block"
+        style={{ marginBottom: "10px", marginRight: "10px"}} />
+  <span style={{ marginTop: "5px", display: "inline-block" }}>MINNANO</span>
+    </Navbar.Brand>
+
+
           </Col>
           <Col xs={8}>
             <Form inline onSubmit={handleSearch}>

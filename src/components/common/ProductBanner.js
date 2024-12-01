@@ -1,9 +1,10 @@
 // components/common/ProductBanner.js
 import React from "react";
+import "../assets/special_offer.png";
 
 const ProductBanner = () => {
-  const bannerImage =
-    "https://via.placeholder.com/1240x500/B2BEB5/333333?text=Promotional+Banner";
+  const bannerImage = require("../assets/special_offer.png");
+
 
   return (
     <div
