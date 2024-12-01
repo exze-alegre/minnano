@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router
 import Header from "../common/Header";
 import BackButton from "../common/BackButton";
 import { FaBox } from "react-icons/fa";
@@ -10,6 +11,8 @@ const MyOrders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("onShipping");
+
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -194,7 +197,11 @@ const MyOrders = () => {
                 </Button>
               </Col>
               <Col xs="auto" className="d-flex justify-content-end">
-                <Button variant="danger" className="rounded-pill px-4 m-3">
+                <Button
+                  variant="danger"
+                  className="rounded-pill px-4 m-3"
+                  onClick={() => navigate(`/order/${groupId}`)} // Navigate to the details page
+                >
                   Details
                 </Button>
               </Col>

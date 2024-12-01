@@ -8,6 +8,7 @@ import Checkout from "./components/pages/Checkout";
 import OrderSuccess from "./components/pages/OrderSuccess";
 import MyOrders from "./components/pages/MyOrders";
 import Login from "./components/pages/Login"; // Import the Login component
+import OrderDetails from "./components/pages/OrderDetails"; // Import the new OrderDetails component
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -43,6 +44,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-successful" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
+          <Route path="/order/:orderGroupId" element={<OrderDetails />} />
+          {/* Route for order details */}
         </Routes>
       </Router>
     </div>

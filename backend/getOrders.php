@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'No user ID found in session.'
+    echo json_encode([ 
+        'success' => false, 
+        'error' => 'No user ID found in session.' 
     ]);
     exit;
 }
@@ -31,21 +31,33 @@ if ($conn->connect_error) {
 }
 
 $user_id = $_SESSION['user_id'];
+$order_group_id = isset($_GET['orderGroupId']) ? $_GET['orderGroupId'] : null;
 
 $sql = "
     SELECT o.order_id, o.user_id, o.shipping_address_id, o.basket_item_id, o.price, o.product_id, o.product_name, o.quantity, 
            o.discount_price, o.image, o.variation_id, o.variation_name, o.added_at, 
-           o.shipping, o.total_payment, o.payment_method, o.saved, o.order_group_id, o.status_id
+           o.shipping, o.total_payment, o.payment_method, o.saved, o.order_group_id, o.status_id,
+           sa.full_name, sa.address, sa.contact_number, sa.created_at AS shipping_created_at
     FROM orders o
-    WHERE o.user_id = ?
+    JOIN shipping_addresses sa ON o.shipping_address_id = sa.shipping_address_id
+    WHERE o.user_id = ? 
 ";
+
+if ($order_group_id) {
+    $sql .= " AND o.order_group_id = ?";  // Filter by order_group_id if provided
+}
 
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die(json_encode(['success' => false, 'error' => 'Error preparing the SQL query.'])); 
 }
 
-$stmt->bind_param("i", $user_id);
+if ($order_group_id) {
+    $stmt->bind_param("ii", $user_id, $order_group_id);  // Bind both user_id and order_group_id if filtering by order_group_id
+} else {
+    $stmt->bind_param("i", $user_id);  // Bind only user_id if not filtering by order_group_id
+}
+
 $stmt->execute();
 
 if ($stmt->errno) {
@@ -95,7 +107,12 @@ foreach ($orders as $order) {
         'saved' => $order['saved'],
         'order_group_id' => $order['order_group_id'],
         'status_id' => $order['status_id'],
-        'variations' => $variations
+        'shipping_details' => [
+            'full_name' => $order['full_name'],
+            'address' => $order['address'],
+            'contact_number' => $order['contact_number'],
+            'shipping_created_at' => $order['shipping_created_at']
+        ],
     ];
 }
 
