@@ -4,11 +4,9 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const Footer = () => {
   return (
-    <footer
-      style={{ backgroundColor: "#F8F8F8", padding: "20px", marginTop: "40px" }}
-    >
+    <footer style={{ backgroundColor: "#F8F8F8", padding: "20px" }}>
       <Container>
-        <Row className="justify-content-center text-start g-5">
+        <Row className="justify-content-center text-start g-5 mb-0">
           <Col xs={2} className="d-flex flex-column align-items-start">
             <b className="mb-2">Customer Service</b>
             <p className="mb-2">Help Center</p>
@@ -26,7 +24,7 @@ const Footer = () => {
           </Col>
           <Col xs={2} className="d-flex flex-column align-items-start">
             <b className="mb-2">Gikapoy nako</b>
-            <p className="mb-2">Why does it have to be this way</p>
+            <p className="mb-2">Why is life like this</p>
             <p className="mb-2">100 points na please</p>
           </Col>
         </Row>
