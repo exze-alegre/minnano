@@ -251,7 +251,7 @@ const Basket = () => {
         {basketItems.length === 0 && (
           <div className="empty-basket-message">
             <BasketEmptyIcon />
-            <p>Your basket is empty!</p>
+            <p>Your basket is empty.</p>
           </div>
         )}
         <Row className="basket-row px-5">

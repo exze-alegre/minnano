@@ -67,6 +67,7 @@ $output = [
         'orderGroupId' => $orderGroupId,
         'shippingAddress' => $orders[0]['address'],
         'shippingContact' => $orders[0]['contact_number'],
+        'fullName' => $orders[0]['full_name'], // Include full name here
         'items' => $orders,
     ]
 ];

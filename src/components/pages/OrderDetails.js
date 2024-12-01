@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // To get the dynamic parameter from the URL
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
+import { IoReceipt } from "react-icons/io5";
+import { IoIosCash } from "react-icons/io";
+import { FaTruckMoving, FaBox, FaStar } from "react-icons/fa";
+import Header from "../common/Header";
+import BackButton from "../common/BackButton";
+import OrderAddress from "../common/OrderAddress";
+import DeliveryTimeline from "../common/DeliveryTimeline";
 import "../../styles/OrderDetails.scss";
 
 const OrderDetails = () => {
-  const { orderGroupId } = useParams(); // Get orderGroupId from URL
-  const [orderData, setOrderData] = useState(null); // Initialize as null
+  const { orderGroupId } = useParams();
+  const [orderData, setOrderData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,31 +23,27 @@ const OrderDetails = () => {
       return;
     }
 
-    // Fetch order details for the given orderGroupId
     fetch(
       `http://localhost/minnano/backend/getOrderDetails.php?orderGroupId=${orderGroupId}`,
       {
         method: "GET",
-        credentials: "include", // Ensure session data is sent
+        credentials: "include",
       }
     )
       .then((response) => response.json())
       .then((data) => {
-        // Log the full response for verification
-        console.log("Full API response:", data);
-
         if (data.success) {
-          setOrderData(data.data || {}); // Store entire response data for full verification
+          setOrderData(data.data || {});
         } else {
           setError(data.error || "Failed to fetch order details.");
         }
         setLoading(false);
       })
-      .catch((error) => {
+      .catch(() => {
         setError("Error fetching data.");
         setLoading(false);
       });
-  }, [orderGroupId]); // Run the effect again if orderGroupId changes
+  }, [orderGroupId]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -51,16 +54,71 @@ const OrderDetails = () => {
   }
 
   return (
-    <Container className="order-details-container">
-      {/* Displaying the full order data as a raw JSON object */}
-      <Row>
-        <Col md={12}>
-          <h3>Full API Response Data:</h3>
-          <pre>{JSON.stringify(orderData, null, 2)}</pre>{" "}
-          {/* Pretty print the full response */}
-        </Col>
-      </Row>
-    </Container>
+    <div className="order-details-page">
+      <Header />
+      <Container className="order-details-page-container">
+        <BackButton />
+
+        <Container className="order-details-container p-0">
+          <div className="order-group d-flex justify-content-end">
+            <Col xs="auto" className="d-flex align-items-center p-3">
+              Order ID: {orderData.orderGroupId}
+            </Col>
+            <Col
+              xs="auto"
+              className="d-flex align-items-center justify-content-center"
+            >
+              <p className="border rounded-pill m-0 mx-2 px-3 p-2">
+                On Deliver
+              </p>
+            </Col>
+          </div>
+          <Row className="text-center mt-4 position-relative">
+            <Col className="position-relative">
+              <div className="icon-container">
+                <IoReceipt size={50} />
+              </div>
+              <p className="mt-2">Order Placed</p>
+            </Col>
+            <Col className="position-relative">
+              <div className="icon-container">
+                <IoIosCash size={50} />
+              </div>
+              <p className="mt-2">Payment Info Confirm</p>
+            </Col>
+            <Col className="position-relative">
+              <div className="icon-container">
+                <FaTruckMoving size={50} />
+              </div>
+              <p className="mt-2">Order Shipped Out</p>
+            </Col>
+            <Col className="position-relative">
+              <div className="icon-container">
+                <FaBox size={50} />
+              </div>
+              <p className="mt-2">Order Arrived</p>
+            </Col>
+            <Col className="position-relative">
+              <div className="icon-container">
+                <FaStar size={50} />
+              </div>
+              <p className="mt-2">To Rate</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={5}>
+              <OrderAddress orderGroupId={orderGroupId} />
+            </Col>
+            <Col>
+              <DeliveryTimeline />
+            </Col>
+          </Row>
+          <Row>gay products</Row>
+
+          {/* Insert the OrderAddress component here, passing orderGroupId as a prop */}
+        </Container>
+      </Container>
+    </div>
   );
 };
 

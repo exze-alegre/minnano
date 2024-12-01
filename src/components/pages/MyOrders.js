@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate from React
 import Header from "../common/Header";
 import BackButton from "../common/BackButton";
 import { FaBox } from "react-icons/fa";
-import { Container, Row, Col, Tab, Nav, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Tab,
+  Nav,
+  Button,
+  Spinner,
+} from "react-bootstrap";
 import "../../styles/MyOrders.scss";
 
 const MyOrders = () => {
@@ -11,6 +19,7 @@ const MyOrders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("onShipping");
+  const [isReceivedEnabled, setIsReceivedEnabled] = useState(false); // Track if the button is enabled
 
   const navigate = useNavigate(); // Initialize navigate
 
@@ -33,6 +42,12 @@ const MyOrders = () => {
     };
 
     fetchOrders();
+
+    // Check localStorage or sessionStorage for previously visited details page
+    const visitedDetails = sessionStorage.getItem("visitedDetails");
+    if (visitedDetails === "true") {
+      setIsReceivedEnabled(true); // Enable the "Order Received" button if they have visited the details page
+    }
   }, []);
 
   // Group orders by order_group_id
@@ -192,6 +207,9 @@ const MyOrders = () => {
                   variant="danger"
                   className="rounded-pill px-4 ms-3 my-3"
                   onClick={() => updateOrderStatus(group[0].order_id)}
+                  disabled={
+                    sessionStorage.getItem("visitedGroupId") !== groupId
+                  } // Disable the button if the groupId doesn't match
                 >
                   Order Received
                 </Button>
@@ -200,7 +218,12 @@ const MyOrders = () => {
                 <Button
                   variant="danger"
                   className="rounded-pill px-4 m-3"
-                  onClick={() => navigate(`/order/${groupId}`)} // Navigate to the details page
+                  onClick={() => {
+                    // Store the groupId of the clicked order group in sessionStorage
+                    sessionStorage.setItem("visitedGroupId", groupId);
+                    setIsReceivedEnabled(true); // Enable the "Order Received" button
+                    navigate(`/order/${groupId}`); // Navigate to the order details page
+                  }}
                 >
                   Details
                 </Button>
@@ -212,7 +235,7 @@ const MyOrders = () => {
     ) : (
       <div className="no-orders-container">
         <FaBox className="no-orders-icon" />
-        <p className="no-orders-text">No orders in this status</p>
+        <p className="no-orders-text">No orders in this status.</p>
       </div>
     );
   };
@@ -222,7 +245,13 @@ const MyOrders = () => {
       <div className="order-page">
         <Header />
         <Container className="order-page-container">
-          <h1>Loading Orders...</h1>
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "100vh" }}
+          >
+            <Spinner animation="border" variant="danger" />
+            <h3 className="ms-3">Loading Orders...</h3>
+          </div>
         </Container>
       </div>
     );
@@ -231,7 +260,7 @@ const MyOrders = () => {
   return (
     <div className="order-page">
       <Header />
-      <Container className="order-page-container">
+      <Container className="order-page-container mt-0">
         <BackButton />
         <Container className="tabs-container">
           <Tab.Container

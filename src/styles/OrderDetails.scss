@@ -1,0 +1,56 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+.order-details-container {
+  max-width: 1000px;
+  border-radius: 30px;
+  border: 1px lightgray solid;
+}
+
+.order-group {
+  background-color: #fafafa;
+  border-top-left-radius: 30px; /* Adjust the value to your preference */
+  border-top-right-radius: 30px; /* Adjust the value to your preference */
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+}
+
+.icon-container svg {
+  color: $cyan-300;
+}
+
+/* Vertical alignment for the line */
+.row.position-relative {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 150px; /* You can adjust this value to control the height of the row */
+}
+
+.row.position-relative::after {
+  content: "";
+  position: absolute;
+  top: 35%; /* Adjust this value to move the line higher or lower */
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background-color: #ddd;
+  z-index: 1;
+}
+
+/* Ensure the line is behind the icons */
+.col.position-relative {
+  z-index: 2;
+}
