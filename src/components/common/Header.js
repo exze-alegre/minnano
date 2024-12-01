@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -19,12 +19,17 @@ import {
 } from "react-bootstrap";
 import "../../styles/Header.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
+import FakeLoader from "../common/FakeLoader";
+import Minnano from "../assets/minnano.png";
 
 const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const loaderRefLogin = useRef();
+  const loaderRefHome = useRef();
   const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -33,12 +38,11 @@ const Header = () => {
           "http://localhost/minnano/backend/checkLogin.php",
           { withCredentials: true }
         );
-        console.log(response.data); // Debug response
         if (response.data.loggedIn) {
           setLoggedIn(true);
-          setUserProfile(response.data.user);
+          setUserProfile(response.data.user); // Store user details if needed
         } else {
-          setLoggedIn(true);
+          setLoggedIn(false);
         }
       } catch (error) {
         console.error("Error checking login status:", error);
@@ -47,6 +51,7 @@ const Header = () => {
 
     checkLogin();
   }, []);
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchQuery) {
@@ -58,8 +63,36 @@ const Header = () => {
     navigate("/");
   };
 
+  const handleSignupClick = () => {
+    loaderRefLogin.current.startLoading(); // Trigger the loader
+  };
+
   const handleBasketClick = () => {
-    navigate("/basket");
+    if (loggedIn) {
+      navigate("/basket");
+    } else {
+      handleSignupClick();
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost/minnano/backend/logout.php",
+        null,
+        {
+          withCredentials: true, // Ensure cookies are sent with the request
+        }
+      );
+
+      if (response.data.status === "success") {
+        setLoggedIn(false); // Update the state to reflect logged out status
+        setUserProfile(null); // Clear user profile data
+        loaderRefHome.current.startLoading(); // Trigger loader for navigation
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
@@ -73,10 +106,13 @@ const Header = () => {
             >
               <img
                 alt="Minnano"
-                src="https://via.placeholder.com/40"
+                src={Minnano}
                 className="d-inline-block"
-              />{" "}
-              MINNANO
+                style={{ marginBottom: "10px", marginRight: "10px" }}
+              />
+              <span style={{ marginTop: "5px", display: "inline-block" }}>
+                MINNANO
+              </span>
             </Navbar.Brand>
           </Col>
           <Col xs={8}>
@@ -86,7 +122,6 @@ const Header = () => {
                   type="text"
                   placeholder="Search"
                   aria-label="Search"
-                  aria-describedby="SearchBar"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -101,12 +136,37 @@ const Header = () => {
           <Col>
             <div className="d-flex justify-content-end align-items-center gap-3">
               {loggedIn ? (
-                <Nav.Link href="#profile">
+                <div
+                  style={{ position: "relative" }}
+                  onMouseEnter={() => setDropdownVisible(true)}
+                  onMouseLeave={() => setDropdownVisible(false)}
+                >
                   <FaRegUser className="profile" />
-                </Nav.Link>
+                  {dropdownVisible && (
+                    <div
+                      className="dropdown-menu show"
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: "0",
+                        zIndex: 10,
+                      }}
+                    >
+                      <button
+                        onClick={() => navigate("/orders")}
+                        className="dropdown-item"
+                      >
+                        Orders
+                      </button>
+                      <button onClick={handleLogout} className="dropdown-item">
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
-                <Nav.Link href="#signup" className="signup">
-                  <strong>Sign Up</strong>
+                <Nav.Link onClick={handleSignupClick}>
+                  <strong className="signup">Sign Up</strong>
                 </Nav.Link>
               )}
               <Nav.Link href="#Likes">
@@ -116,6 +176,8 @@ const Header = () => {
                 <FaShoppingBasket className="basket" />
               </Nav.Link>
             </div>
+            <FakeLoader ref={loaderRefLogin} nextPage="/login" />
+            <FakeLoader ref={loaderRefHome} nextPage="/" />
           </Col>
         </Row>
 

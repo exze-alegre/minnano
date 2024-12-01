@@ -9,3 +9,21 @@
   max-width: 100%; // Ensure cards don't exceed the container width
   margin-bottom: 20px; // Spacing between rows of cards
 }
+html,
+body {
+  height: 100%; /* Ensure the viewport height is utilized */
+  margin: 0; /* Remove default margins */
+  display: flex;
+  flex-direction: column; /* Allow stacking of header, content, footer */
+}
+
+.home-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Full viewport height
+}
+
+.home-layout main {
+  flex: 1; // Push footer to the bottom
+  padding: 5px;
+}

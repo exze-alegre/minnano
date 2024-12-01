@@ -1,0 +1,88 @@
+.timeline-container {
+  text-align: center;
+  max-height: 350px; /* Fixed height for showing 2.5 updates */
+  overflow-y: auto; /* Enable scrolling */
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8 !important;
+  }
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(83, 83, 83, 0.07);
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar {
+    width: 7px;
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+  }
+}
+
+.timeline {
+  position: relative;
+  margin-left: 20px;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 12px;
+  cursor: default; /* Prevent the mouse cursor from changing */
+  opacity: 0; /* Initially hidden */
+  animation: fadeIn 1s ease-in-out forwards; /* Apply slower fade-in animation (1s duration) */
+}
+
+.timeline-item.visible {
+  opacity: 1; /* Make visible when the class is added */
+}
+
+.timeline-item:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.timeline-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.timeline-item:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.timeline-content {
+  margin-left: 30px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
+}
+
+.timeline .time {
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0;
+}
+
+.timeline .status {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.timeline .description {
+  font-size: 14px;
+  color: #555;
+}
+
+.timeline-item:hover .timeline-content {
+  background-color: #e9ecef; /* Highlight when hovered */
+}

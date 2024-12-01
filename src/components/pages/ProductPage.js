@@ -4,8 +4,8 @@ import Header from "../common/Header";
 import BackButton from "../common/BackButton";
 import ProductImagePreview from "../common/ProductImagePreview";
 import ProductDetails from "../common/ProductDetails";
+import Footer from "../common/Footer";
 import { Container, Row, Col } from "react-bootstrap";
-import Reviews from "../common/Reviews"; // Import the Reviews component
 import "../../styles/ProductPage.scss"; // Import SCSS for custom styling
 
 const ProductPage = () => {
@@ -80,8 +80,8 @@ const ProductPage = () => {
         </Row>
 
         {/* Reviews Component */}
-        <Reviews reviews={reviews} loading={loading} error={error} />
       </Container>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

@@ -1,5 +1,3 @@
-//db.php
-
 <?php
 $servername = "localhost";
 $username = "root";  // Default username for XAMPP

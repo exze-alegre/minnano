@@ -1,0 +1,52 @@
+.reviews-section {
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.reviews-section h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.reviews-section p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between each review */
+}
+
+.review-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eaeaea;
+}
+
+.review-item h5 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #007bff; /* Accent color for usernames */
+  margin-bottom: 5px;
+}
+
+.review-item p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.review-item small {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.review-item p:last-child {
+  margin-top: 10px;
+  font-style: italic;
+}

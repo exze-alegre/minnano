@@ -4,15 +4,15 @@ import { Carousel } from "react-bootstrap";
 
 const ProductCarousel = () => {
   const images = [
-    "https://via.placeholder.com/1240x500/ff7f7f/333333?text=Image+1",
-    "https://via.placeholder.com/1240x500/7f7fff/333333?text=Image+2",
-    "https://via.placeholder.com/1240x500/7fff7f/333333?text=Image+3",
-    "https://via.placeholder.com/1240x500/ffff7f/333333?text=Image+4",
-    "https://via.placeholder.com/1240x500/ff7fff/333333?text=Image+5",
+    require("../assets/special_offer.png"),
+    require("../assets/banner1.png"),
+    require("../assets/banner2.png"),
+    require("../assets/banner3.png"),
+    require("../assets/banner4.png"),
   ];
 
   return (
-    <Carousel interval={800} className="m-5" controls={false}>
+    <Carousel interval={1200} className="m-5" >
       {images.map((image, index) => (
         <Carousel.Item key={index}>
           <img

@@ -3,17 +3,25 @@ import Header from "../common/Header";
 import ShippingAddress from "../common/ShippingAdress";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import FakeLoader from "../common/FakeLoader";
-import CustomDropdown from "../common/CustomDropdown"; // You can still keep the CustomDropdown for the payment method
-import VoucherModal from "../common/VoucherModal"; // Import the new VoucherModal
+import Footer from "../common/Footer";
+import CustomDropdown from "../common/CustomDropdown";
+import VoucherModal from "../common/VoucherModal";
 import "../../styles/Checkout.scss";
 
 const Checkout = () => {
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [showVoucherModal, setShowVoucherModal] = useState(false);
   const loaderRef = useRef();
+  const [shippingAddressId, setShippingAddressId] = useState(null);
+
+  // Set a default shipping address ID if none is selected
+  useEffect(() => {
+    const defaultShippingAddress = 1; // You can set this to a default address ID you have in your system
+    setShippingAddressId((prevId) => prevId || defaultShippingAddress);
+  }, []);
 
   useEffect(() => {
     const storedCheckoutItems = JSON.parse(
@@ -30,13 +38,32 @@ const Checkout = () => {
       .catch((error) => console.error("Error fetching vouchers:", error));
   }, []);
 
+  useEffect(() => {
+    fetch("http://localhost/minnano/backend/getUserIdFromSession.php", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          setUserId(data.user.user_id);
+        } else {
+          alert(data.message || "Failed to retrieve user ID.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user ID:", error);
+        alert("An error occurred while fetching the user ID.");
+      });
+  }, []);
+
   const handleVoucherSelect = (voucher) => {
     const merchandiseSubtotal = checkoutItems.reduce(
       (total, item) => total + item.discount_price * item.quantity,
       0
     );
 
-    // Check if the voucher's minimum spend is met
     if (merchandiseSubtotal >= voucher.min_spend) {
       setSelectedVoucher(voucher);
       setShowVoucherModal(false);
@@ -44,6 +71,11 @@ const Checkout = () => {
       alert(`Voucher requires a minimum spend of ₱${voucher.min_spend}`);
     }
   };
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
+    id: 1,
+    variation_name: "Cash on Delivery",
+  });
 
   const handlePaymentMethodSelect = (method) => {
     setSelectedPaymentMethod(method);
@@ -54,48 +86,66 @@ const Checkout = () => {
     0
   );
 
-  let totalPayment = merchandiseSubtotal;
+  const totalPrice = checkoutItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
-  // Apply voucher discount
+  let voucherDiscount = 0;
   if (selectedVoucher) {
     if (selectedVoucher.discount_type === "percentage") {
-      totalPayment -=
+      voucherDiscount =
         merchandiseSubtotal * (selectedVoucher.discount_value / 100);
     } else if (selectedVoucher.discount_type === "fixed") {
-      if (merchandiseSubtotal >= selectedVoucher.min_spend) {
-        totalPayment -= selectedVoucher.discount_value;
-      }
+      voucherDiscount = selectedVoucher.discount_value;
     }
   }
 
-  // Add shipping fee to total payment
-  const shippingFee = 120; // Hardcoded shipping fee
+  // Calculate total payment after applying voucher discount
+  let totalPayment = merchandiseSubtotal - voucherDiscount;
+  const shippingFee = 120;
   totalPayment += shippingFee;
 
-  totalPayment = totalPayment < 0 ? 0 : totalPayment.toFixed(2);
+  // Calculate the amount saved (only item price difference, no shipping fee)
+  const savedAmount = (
+    totalPrice -
+    (merchandiseSubtotal - voucherDiscount)
+  ).toFixed(2);
+
+  console.log("Total Saved:", savedAmount); // This should show ₱ 419.48
 
   const placeOrder = async () => {
-    loaderRef.current.startLoading(); // Trigger the loader
+    loaderRef.current.startLoading();
+    console.log("Current User ID:", userId);
 
-    // Construct the orderData dynamically from the checkoutItems and additional fields
-    const orderData = checkoutItems.map((item) => ({
-      user_id: 1, // Replace with the actual user ID
-      basket_item_id: item.basket_item_id,
-      price: item.price, // Original price
-      product_id: item.product_id,
-      product_name: item.product_name,
-      quantity: item.quantity,
-      discount_price: item.discount_price, // Discounted price
-      image: item.selected_variation.image,
-      variation_name: item.selected_variation.variation_name,
-      variation_id: item.variation_id,
-      shipping: shippingFee, // Shipping fee
-      total_payment: totalPayment, // Total payment after discount and shipping
-      payment_method: selectedPaymentMethod
-        ? selectedPaymentMethod.variation_name
-        : "N/A", // Payment method
-      saved: (merchandiseSubtotal - totalPayment + shippingFee).toFixed(2), // Saved amount
-    }));
+    if (userId === null) {
+      alert("User is not logged in.");
+      return;
+    }
+
+    const orderData = {
+      user_id: userId,
+      shipping_address_id: shippingAddressId,
+      items: checkoutItems.map((item) => ({
+        basket_item_id: item.basket_item_id,
+        price: item.price,
+        product_id: item.product_id,
+        product_name: item.product_name,
+        quantity: item.quantity,
+        discount_price: item.discount_price,
+        image: item.selected_variation.image,
+        variation_name: item.selected_variation.variation_name,
+        variation_id: item.variation_id,
+        shipping: shippingFee,
+        total_payment: totalPayment,
+        payment_method: selectedPaymentMethod
+          ? selectedPaymentMethod.variation_name
+          : "N/A",
+        saved: savedAmount,
+      })),
+    };
+
+    console.log("Order Data Sent:", orderData);
 
     try {
       const response = await fetch(
@@ -103,9 +153,10 @@ const Checkout = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Ensure content type is set to JSON
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(orderData), // Send the dynamically created JSON data
+          body: JSON.stringify(orderData),
+          credentials: "include",
         }
       );
 
@@ -115,6 +166,14 @@ const Checkout = () => {
 
       const data = await response.json();
       console.log(data);
+
+      if (data.success) {
+        alert(
+          `Order placed successfully! Order Group ID: ${data.order_group_id}`
+        );
+      } else {
+        alert("Failed to place order. Please try again.");
+      }
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -125,7 +184,7 @@ const Checkout = () => {
       <Header />
       <Container className="checkout-page-container mt-3">
         <Row className="checkout-row px-4">
-          <ShippingAddress />
+          <ShippingAddress onSelectAddress={setShippingAddressId} />
         </Row>
         <Row className="px-5">
           <Col md={8}>
@@ -203,7 +262,7 @@ const Checkout = () => {
 
               <h4>Payment Method</h4>
               <CustomDropdown
-                title="Cash on Delivery"
+                title={selectedPaymentMethod.variation_name} // Use the default payment method
                 items={[
                   { id: 1, variation_name: "Cash on Delivery" },
                   { id: 2, variation_name: "Credit Card" },
@@ -226,12 +285,7 @@ const Checkout = () => {
                       : Number(selectedVoucher.discount_value).toFixed(2)}
                   </p>
                 )}
-                <p>
-                  Saved: ₱
-                  {(merchandiseSubtotal - totalPayment + shippingFee).toFixed(
-                    2
-                  )}
-                </p>
+                <p>Saved: ₱ {savedAmount}</p>
                 <hr />
                 <h5>Total Payment: ₱{totalPayment}</h5>
               </div>
@@ -248,7 +302,6 @@ const Checkout = () => {
           </Col>
         </Row>
       </Container>
-
       <VoucherModal
         show={showVoucherModal}
         onClose={() => setShowVoucherModal(false)} // Close the modal
@@ -256,6 +309,7 @@ const Checkout = () => {
         onSelectVoucher={handleVoucherSelect} // Handle voucher selection
         merchandiseSubtotal={merchandiseSubtotal} // Pass merchandiseSubtotal as a prop
       />
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

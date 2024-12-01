@@ -6,6 +6,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh; /* Ensures the page always takes the full height of the viewport */
+}
+
+.basket-page-container {
+  flex: 1; /* Pushes the footer to the bottom by taking up remaining space */
 }
 
 .basket-row {
@@ -21,9 +26,23 @@
 }
 
 .empty-basket-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-size: 18px;
-  color: #555;
+  margin-top: -2rem; /* Move it slightly upwards */
+  padding: 2rem; /* Ensure proper spacing around the message */
+}
+
+.empty-basket-message p {
+  margin-top: 10px; /* Adjust spacing between the icon and the text */
+  font-size: 1.2rem; /* Optional: Adjust text size */
+  color: grey;
+}
+
+.empty-basket-message svg {
+  font-size: 3rem; /* Adjust the size of the icon */
 }
 
 .quantity-control {
@@ -62,4 +81,9 @@
   .checkout-button:hover {
     background-color: $red-700;
   }
+}
+
+footer {
+  margin-top: auto; /* Ensures the footer stays at the bottom */
+  width: 100%; /* Ensures the footer spans the full width */
 }

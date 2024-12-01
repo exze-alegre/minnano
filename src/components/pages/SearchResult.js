@@ -1,9 +1,10 @@
-//SearchResult.js
-
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../common/Header";
 import ProductCard from "../common/ProductCard";
+import BackButton from "../common/BackButton";
+import Footer from "../common/Footer";
+import "../../styles/SearchResult.scss";
 
 const SearchResults = ({ loggedIn, userProfile }) => {
   // Make sure to call useLocation to get the location object
@@ -39,23 +40,23 @@ const SearchResults = ({ loggedIn, userProfile }) => {
   }, [searchQuery]); // Trigger the fetch whenever the searchQuery changes
 
   return (
-    <div className="container-fluid p-0 m-0">
+    <div className="search-page container-fluid p-0 m-0 ">
       <Header loggedIn={loggedIn} userProfile={userProfile} />
-
-      <div className="container-fluid p-0 m-0">
-        {/* Display the search query in the heading */}
-        <p>Search results for "{searchQuery}"</p>
+      <BackButton className="back-button" />
+      <div className="search-page-container container-fluid">
+        <h5>Search results for "{searchQuery}"</h5>
         <div className="product-list-container">
           {/* Display products if available */}
           {products.length > 0 ? (
             products.map((product) => (
-              <ProductCard key={product.id} product={product} size="large" />
+              <ProductCard key={product.id} product={product} size="small" />
             ))
           ) : (
             <p>No products found.</p> // Show a message if no products are found
           )}
         </div>
       </div>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

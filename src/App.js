@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SearchResults from "./components/pages/SearchResult";
 import Basket from "./components/pages/Basket";
+
 import Home from "./components/pages/Home";
 import ProductPage from "./components/pages/ProductPage";
 import Checkout from "./components/pages/Checkout";
 import OrderSuccess from "./components/pages/OrderSuccess";
+import MyOrders from "./components/pages/MyOrders";
 import Login from "./components/pages/Login"; // Import the Login component
+import OrderDetails from "./components/pages/OrderDetails"; // Import the new OrderDetails component
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -41,6 +44,9 @@ function App() {
           />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-successful" element={<OrderSuccess />} />
+          <Route path="/orders" element={<MyOrders />} />
+          <Route path="/order/:orderGroupId" element={<OrderDetails />} />
+          {/* Route for order details */}
         </Routes>
       </Router>
     </div>

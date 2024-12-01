@@ -4,7 +4,9 @@ import BackButton from "../common/BackButton";
 import FakeLoader from "../common/FakeLoader";
 import BasketItem from "../common/BasketItem"; // Import the new BasketItem component
 import Notifications from "../common/Notification"; // Assuming you have a Notifications component
+import Footer from "../common/Footer";
 import { Container, Row, Col } from "react-bootstrap";
+import BasketEmptyIcon from "../assets/BasketEmptyIcon"; // Import your custom icon component
 import "../../styles/Basket.scss";
 
 const Basket = () => {
@@ -60,7 +62,10 @@ const Basket = () => {
   };
 
   const fetchBasketItems = () => {
-    fetch("http://localhost/minnano/backend/getBasketItems.php?user_id=1")
+    fetch("http://localhost/minnano/backend/getBasketItems.php", {
+      method: "GET",
+      credentials: "include", // Ensure cookies (session) are sent
+    })
       .then((response) => {
         console.log("Response status:", response.status);
         if (!response.ok) {
@@ -70,16 +75,17 @@ const Basket = () => {
       })
       .then((data) => {
         console.log("Data received:", data);
-        if (Array.isArray(data)) {
-          setBasketItems(data);
+        if (data.success) {
+          // Correctly set the basket items from the 'data' field
+          setBasketItems(data.data); // Update the state with the basket items
         } else {
-          console.error("Failed to fetch basket items or the array is empty");
-          setBasketItems([]);
+          console.error("Error fetching basket items:", data.error);
+          setBasketItems([]); // Fallback if something went wrong
         }
       })
       .catch((error) => {
         console.error("Error:", error.message);
-        setBasketItems([]);
+        setBasketItems([]); // Fallback if there’s an error with the fetch
       });
   };
 
@@ -242,39 +248,47 @@ const Basket = () => {
       <Header />
       <Container className="basket-page-container">
         <BackButton />
+        {/* Empty message container under the BackButton */}
+        {basketItems.length === 0 && (
+          <div className="empty-basket-message">
+            <BasketEmptyIcon />
+            <p>Your basket is empty.</p>
+          </div>
+        )}
         <Row className="basket-row px-5">
           <Col className="basket-items">
-            {basketItems.map((item) => (
-              <BasketItem
-                key={item.basket_item_id}
-                item={item}
-                onCheckboxChange={handleCheckboxChange}
-                handleVariationChange={handleVariationChange}
-                increaseQuantity={increaseQuantity}
-                decreaseQuantity={decreaseQuantity}
-                handleQuantityChange={handleQuantityChange}
-                removeItem={removeItem}
-              />
-            ))}
+            {basketItems.length > 0
+              ? basketItems.map((item) => (
+                  <BasketItem
+                    key={item.basket_item_id}
+                    item={item}
+                    onCheckboxChange={handleCheckboxChange}
+                    handleVariationChange={handleVariationChange}
+                    increaseQuantity={increaseQuantity}
+                    decreaseQuantity={decreaseQuantity}
+                    handleQuantityChange={handleQuantityChange}
+                    removeItem={removeItem}
+                  />
+                ))
+              : null}
           </Col>
-          <Col className="checkout-summary">
-            {basketItems.length > 0 ? (
-              <>
-                <h3>Cart Summary</h3>
-                <p>Total Price: ₱{totalDiscountPrice.toFixed(2)}</p>
-                <p>Saved: ₱{priceAfterDiscount.toFixed(2)}</p>
-              </>
-            ) : (
-              <p>Your cart is empty!</p>
-            )}
-            <button className="checkout-button" onClick={handleCheckout}>
-              Proceed to Checkout
-            </button>
-            <FakeLoader ref={loaderRef} nextPage="/checkout" />
-          </Col>
+
+          {/* Checkout summary column only appears if there are items in the cart */}
+          {basketItems.length > 0 && (
+            <Col className="checkout-summary">
+              <h3>Cart Summary</h3>
+              <p>Total Price: ₱{totalDiscountPrice.toFixed(2)}</p>
+              <p>Saved: ₱{priceAfterDiscount.toFixed(2)}</p>
+              <button className="checkout-button" onClick={handleCheckout}>
+                Proceed to Checkout
+              </button>
+              <FakeLoader ref={loaderRef} nextPage="/checkout" />
+            </Col>
+          )}
         </Row>
         <Notifications notifications={notifications} />
       </Container>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };

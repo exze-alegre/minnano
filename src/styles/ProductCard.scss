@@ -55,6 +55,7 @@
     padding: 0;
     background-color: transparent !important;
   }
+
   .stars-rating-container {
     display: flex;
     align-items: center; /* Centers vertically */
@@ -70,6 +71,8 @@
 
   .card-body {
     padding: 0;
+    align-items: center; /* Centers vertically */
+    gap: 8px; /* Adjust spacing between stars and rating */
   }
 
   // Image styles

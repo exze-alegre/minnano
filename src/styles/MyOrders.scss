@@ -1,0 +1,83 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+.order-page-container {
+  margin-top: 20px;
+  max-width: 1300px;
+
+  .active-tab {
+    background-color: #dc3545 !important; /* Bootstrap danger color */
+    color: white !important; /* Text color for active tab */
+    border-radius: 50px; /* Rounded corners */
+    width: 100%; /* Full width */
+  }
+  .nav-link:not(.active) {
+    color: gray; /* Set the color for inactive tabs */
+  }
+
+  .nav-link:not(.active):hover {
+    color: black; /* Optional: Change color on hover for inactive tabs */
+    text-decoration: none; /* Ensure no underline on hover */
+  }
+
+  .nav-link {
+    transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+  }
+}
+
+.tabs-container {
+  max-width: 1000px;
+}
+
+.order-group-container {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.order-items-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-product-name {
+  font-family: "Lora", sans-serif;
+  font-size: 20px;
+}
+
+.order-discount {
+  font-size: 20px;
+  color: $cyan-300;
+}
+
+.order-price {
+  text-decoration: line-through;
+  color: #888; // Style for the original price with strikethrough
+}
+
+.total-price {
+  color: $cyan-300;
+}
+
+.no-orders-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 300px; // Adjust to ensure it's tall enough to center content
+  text-align: center;
+  color: #888; // Light gray color
+}
+
+.no-orders-icon {
+  font-size: 3rem; // Adjust icon size as needed
+  margin-bottom: 1rem; // Add some spacing below the icon
+}
+
+.no-orders-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+}

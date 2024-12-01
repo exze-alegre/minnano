@@ -4,6 +4,7 @@ import ProductCard from "../common/ProductCard";
 import Header from "../common/Header";
 import BackButton from "../common/BackButton";
 import { Container, Row, Col } from "react-bootstrap";
+import Footer from "../common/Footer";
 import { IoHappy } from "react-icons/io5"; // Importing the happy icon
 import "../../styles/OrderSuccess.scss"; // Custom styles for the component
 import { IoArrowBack } from "react-icons/io5"; // Import IoArrowBack icon
@@ -66,6 +67,7 @@ const OrderSuccess = () => {
           ))}
         </Row>
       </Container>
+      <Footer /> {/* Footer is always at the bottom */}
     </div>
   );
 };
