@@ -3,7 +3,7 @@ import React from "react";
 import "../assets/special_offer.png";
 
 const ProductBanner = () => {
-  const bannerImage = require("../assets/special_offer.png");
+  const bannerImage = require("../assets/voucher.png");
 
 
   return (
